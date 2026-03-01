@@ -131,13 +131,20 @@ def get_stock_insights(ticker_symbol: str) -> dict:
         raise ValueError("Ticker symbol not found or no historical data")
 
     # compute current price information
-    last_close = float(hist["Close"].iloc[-1])
-    prev_close = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else last_close
-    change_percent = ((last_close - prev_close) / prev_close) * 100 if prev_close != 0 else 0
+    try:
+        last_close = safe_float(hist["Close"].iloc[-1])
+        prev_close = safe_float(hist["Close"].iloc[-2]) if len(hist) >= 2 else last_close
+        if last_close is not None and prev_close is not None and prev_close != 0:
+            change_percent = ((last_close - prev_close) / prev_close) * 100
+        else:
+            change_percent = 0
+    except:
+        last_close = None
+        change_percent = 0
 
     # 52-week extremes
-    high_52 = float(hist["High"].max())
-    low_52 = float(hist["Low"].min())
+    high_52 = safe_float(hist["High"].max())
+    low_52 = safe_float(hist["Low"].min())
 
     # 6-month slice
     last_6m = _slice_last_six_months(hist.copy())
@@ -147,7 +154,7 @@ def get_stock_insights(ticker_symbol: str) -> dict:
         for idx, row in last_6m.iterrows()
     ]
     volume_history = [
-        {"date": idx.strftime("%Y-%m-%d"), "volume": int(row["Volume"])}
+        {"date": idx.strftime("%Y-%m-%d"), "volume": int(row["Volume"]) if not pd.isna(row["Volume"]) else None}
         for idx, row in last_6m.iterrows()
     ]
 
@@ -156,7 +163,7 @@ def get_stock_insights(ticker_symbol: str) -> dict:
     closes = closes.dropna()
     if closes.empty:
         preds_list = []
-        avg_pred = 0
+        avg_pred = None
     else:
         # encode days as integers
         closes["day"] = np.arange(len(closes))
@@ -174,15 +181,18 @@ def get_stock_insights(ticker_symbol: str) -> dict:
             {"date": d.strftime("%Y-%m-%d"), "predicted_price": safe_float(p)}
             for d, p in zip(future_dates, preds)
         ]
-        avg_pred = float(np.mean(preds))
+        avg_pred = float(np.mean(preds)) if len(preds) > 0 else None
 
-    trend_signal = "Bullish" if avg_pred > last_close else "Bearish"
+    if avg_pred is not None and last_close is not None:
+        trend_signal = "Bullish" if avg_pred > last_close else "Bearish"
+    else:
+        trend_signal = "Neutral"
 
     response = {
-        "current_price": safe_float(last_close),
-        "change_percent": safe_float(change_percent),
-        "52_week_high": safe_float(high_52),
-        "52_week_low": safe_float(low_52),
+        "current_price": last_close,
+        "change_percent": change_percent,
+        "52_week_high": high_52,
+        "52_week_low": low_52,
         "price_history_6m": price_history_6m,
         "volume_history": volume_history,
         "ml_prediction_30d": preds_list,
