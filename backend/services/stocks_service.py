@@ -77,6 +77,7 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
 
             data = {
                 "symbol": symbol,
+                "currency": info.get("currency") or getattr(fast, "currency", "USD"),
                 "marketCap": float(market_cap) if market_cap else None,
                 "trailingPE": float(pe_ratio) if pe_ratio else None,
                 "dividendYield": float(dividend_yield) if dividend_yield else None,

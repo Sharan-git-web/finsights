@@ -7,6 +7,7 @@ export default function ComparisonTable({ stocks }) {
     if (!stocks || stocks.length === 0) return null;
 
     const metrics = [
+        { label: 'Reporting Currency', key: 'currency' },
         { label: 'Market Capitalization', key: 'marketCap', isCurrency: true, isCompact: true },
         { label: 'Price-to-Earnings (P/E)', key: 'peRatio' },
         { label: 'Dividend Yield', key: 'dividendYield', suffix: '%' },
@@ -35,18 +36,29 @@ export default function ComparisonTable({ stocks }) {
                                 <td className="px-8 py-5 text-[var(--text-muted)] font-medium group-hover:text-[var(--text-main)] transition-colors">{metric.label}</td>
                                 {stocks.map((stock) => {
                                     const val = stock[metric.key];
-                                    if (val === null || val === undefined || Number.isNaN(val)) {
+                                    if (val === null || val === undefined || (typeof val === 'number' && Number.isNaN(val))) {
                                         return (
                                             <td key={stock.symbol} className="px-8 py-5 font-bold text-[var(--text-main)] tabular-nums">—</td>
                                         );
                                     }
 
-                                    let displayVal;
-                                    if (metric.isCompact && metric.isCurrency) {
-                                        const rate = getRate(selectedCurrency);
-                                        const adjustedVal = val * rate;
+                                    // Special case for reporting currency
+                                    if (metric.key === 'currency') {
+                                        return (
+                                            <td key={stock.symbol} className="px-8 py-5 font-bold text-[var(--accent-primary)] tabular-nums uppercase">
+                                                {val}
+                                            </td>
+                                        );
+                                    }
 
-                                        // Manual compact formatting depending on currency symbol to ensure 2.1T instead of long numbers
+                                    let displayVal;
+                                    const stockToUSDRate = getRate(stock.currency);
+                                    const targetToUSDRate = getRate(selectedCurrency);
+                                    const conversionFactor = targetToUSDRate / stockToUSDRate;
+
+                                    if (metric.isCompact && metric.isCurrency) {
+                                        const adjustedVal = val * conversionFactor;
+
                                         const formatter = new Intl.NumberFormat('en-US', {
                                             style: 'currency',
                                             currency: selectedCurrency,
@@ -56,7 +68,15 @@ export default function ComparisonTable({ stocks }) {
                                         displayVal = formatter.format(adjustedVal);
 
                                     } else if (metric.isCurrency) {
-                                        displayVal = formatCurrency(val, selectedCurrency, getRate(selectedCurrency));
+                                        // Manual calculation since formatCurrency doesn't take conversionFactor easily
+                                        const adjustedVal = val * conversionFactor;
+                                        const locale = selectedCurrency === 'INR' ? 'en-IN' : 'en-US';
+                                        displayVal = new Intl.NumberFormat(locale, {
+                                            style: 'currency',
+                                            currency: selectedCurrency,
+                                            minimumFractionDigits: 2,
+                                            maximumFractionDigits: 2,
+                                        }).format(adjustedVal);
                                     } else {
                                         displayVal = typeof val === 'number' ? Number(val.toFixed(2)).toLocaleString() : val;
                                         if (metric.suffix) displayVal = `${displayVal}${metric.suffix}`;

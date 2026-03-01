@@ -30,6 +30,7 @@ export function useComparison() {
             // Sanitization Layer
             const sanitizedStocks = res.data.stocks.map((raw) => ({
                 symbol: raw.symbol,
+                currency: raw.currency || 'USD',
                 marketCap: safeNumber(raw.marketCap),
                 peRatio: safeNumber(raw.trailingPE),
                 dividendYield: safePercent(raw.dividendYield, true),
