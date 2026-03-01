@@ -63,23 +63,23 @@ export default function Dashboard() {
     }
 
     const StatCard = ({ label, value, subtext, trend, trendValue }) => (
-        <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--border-color)] transition-all duration-200">
-            <p className="text-[13px] font-medium text-[var(--text-muted)] mb-1">{label}</p>
+        <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--border-color)] transition-all duration-200 hover:border-[var(--accent-primary)]/30 group">
+            <p className="text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-2">{label}</p>
             <div className="flex items-baseline gap-2">
-                <h2 className="text-2xl font-bold text-[var(--text-main)] tracking-tight">{value}</h2>
+                <h2 className="text-3xl font-bold text-[var(--text-main)] tracking-tight">{value}</h2>
                 {trend && (
-                    <span className={`text-xs font-semibold flex items-center ${trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                    <span className={`text-[13px] font-bold flex items-center ${trend === 'up' ? 'text-emerald-500' : 'text-rose-500'}`}>
                         {trend === 'up' ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
                         {trendValue}%
                     </span>
                 )}
             </div>
-            {subtext && <p className="text-[11px] text-[var(--text-muted)] mt-2 opacity-70">{subtext}</p>}
+            {subtext && <p className="text-[11px] text-[var(--text-muted)] mt-4 font-medium opacity-80">{subtext}</p>}
         </div>
     );
 
     return (
-        <div className="max-w-[1400px] mx-auto space-y-8 pb-10">
+        <div className="max-w-[1400px] mx-auto space-y-6 pb-10">
 
             {/* Top Section: Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -113,15 +113,15 @@ export default function Dashboard() {
                 <div className="lg:col-span-2 bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border-color)]">
                     <div className="flex justify-between items-center mb-8">
                         <div>
-                            <h3 className="text-lg font-bold text-[var(--text-main)]">Portfolio Growth</h3>
-                            <p className="text-sm text-[var(--text-muted)]">Historical performance of your assets</p>
+                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-1">Portfolio Growth</h3>
+                            <p className="text-xl font-bold text-[var(--text-main)]">Asset performance history</p>
                         </div>
-                        <div className="flex bg-[var(--bg-primary)] p-1 rounded-md">
+                        <div className="flex bg-[var(--bg-primary)] p-1 rounded-lg border border-[var(--border-color)]">
                             {['1W', '1M', '1Y', 'ALL'].map(f => (
                                 <button
                                     key={f}
                                     onClick={() => setTimeFilter(f)}
-                                    className={`px-3 py-1 text-xs font-semibold rounded-md transition-all ${timeFilter === f ? 'bg-white text-[var(--text-main)] shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'}`}
+                                    className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${timeFilter === f ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'}`}
                                 >
                                     {f}
                                 </button>
@@ -129,55 +129,57 @@ export default function Dashboard() {
                         </div>
                     </div>
 
-                    <div className="h-[300px] w-full">
+                    <div className="h-[320px] w-full">
                         <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={historyData}>
-                                <defs>
-                                    <linearGradient id="colorGrowth" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="5%" stopColor="var(--accent-primary)" stopOpacity={0.05} />
-                                        <stop offset="95%" stopColor="var(--accent-primary)" stopOpacity={0} />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.5} />
+                            <LineChart data={historyData}>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.3} />
                                 <XAxis
                                     dataKey="time"
                                     axisLine={false}
                                     tickLine={false}
-                                    tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
+                                    tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 500 }}
                                     dy={10}
                                 />
                                 <YAxis
                                     axisLine={false}
                                     tickLine={false}
-                                    tick={{ fill: 'var(--text-muted)', fontSize: 11 }}
+                                    tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 500 }}
                                     tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
                                     width={45}
                                 />
                                 <RechartsTooltip
-                                    contentStyle={{ borderRadius: '8px', border: '1px solid var(--border-color)', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                                    cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }}
+                                    contentStyle={{
+                                        backgroundColor: 'var(--bg-card)',
+                                        borderRadius: '12px',
+                                        border: '1px solid var(--border-color)',
+                                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
+                                        padding: '12px'
+                                    }}
+                                    itemStyle={{ color: 'var(--text-main)', fontSize: '13px', fontWeight: 'bold' }}
+                                    labelStyle={{ color: 'var(--text-muted)', fontSize: '11px', marginBottom: '4px' }}
                                 />
-                                <Area
+                                <Line
                                     type="monotone"
                                     dataKey="value"
                                     stroke="var(--accent-primary)"
-                                    strokeWidth={2}
-                                    fillOpacity={1}
-                                    fill="url(#colorGrowth)"
+                                    strokeWidth={1.5}
                                     dot={false}
-                                    activeDot={{ r: 4, fill: 'var(--accent-primary)', stroke: 'white', strokeWidth: 2 }}
+                                    activeDot={{ r: 4, fill: 'var(--accent-primary)', stroke: 'var(--bg-card)', strokeWidth: 2 }}
+                                    animationDuration={1500}
                                 />
-                            </AreaChart>
+                            </LineChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
                 {/* Portfolio Summary / Alerts */}
                 <div className="space-y-4">
-                    <h3 className="text-lg font-bold text-[var(--text-main)] px-2">Portfolio Summary</h3>
+                    <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest px-2">Portfolio Summary</h3>
 
-                    <div className="bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-500/20 p-4 rounded-xl flex gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-                            <AlertCircle size={20} className="text-orange-600 dark:text-orange-400" />
+                    <div className="bg-[var(--bg-card)] border-l-2 border-orange-500/50 p-5 rounded-r-xl border-y border-r border-[var(--border-color)] flex gap-4 transition-all hover:bg-[var(--bg-primary)]/40">
+                        <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                            <AlertCircle size={16} className="text-orange-500/80" />
                         </div>
                         <div>
                             <p className="text-[13px] font-bold text-orange-900 dark:text-orange-100">Portfolio is concentrated</p>
@@ -202,38 +204,38 @@ export default function Dashboard() {
 
             {/* Bottom Section: Holdings Table */}
             <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] overflow-hidden">
-                <div className="p-6 border-b border-[var(--border-color)] flex justify-between items-center">
-                    <h3 className="text-lg font-bold text-[var(--text-main)]">Holdings</h3>
-                    <button className="p-2 hover:bg-[var(--bg-primary)] rounded-md text-[var(--text-muted)]">
+                <div className="px-8 py-6 border-b border-[var(--border-color)] flex justify-between items-center">
+                    <h3 className="text-sm font-bold text-[var(--text-main)] uppercase tracking-widest">Asset Allocation</h3>
+                    <button className="p-2 hover:bg-[var(--bg-primary)] rounded-lg text-[var(--text-muted)] transition-colors">
                         <MoreHorizontal size={18} />
                     </button>
                 </div>
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead>
-                            <tr className="bg-[var(--bg-primary)] text-left">
-                                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">Stock</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider text-right">Allocation</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider text-right">Current Value</th>
-                                <th className="px-6 py-4 text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider text-right">Gain/Loss</th>
+                            <tr className="bg-[var(--bg-primary)]/50 text-left">
+                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em]">Stock Asset</th>
+                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Allocation</th>
+                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Value</th>
+                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Performance</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--border-color)]">
                             {portfolioData?.holdings?.map((h) => (
-                                <tr key={h.symbol} className="hover:bg-[var(--bg-primary)] transition-colors cursor-pointer group">
-                                    <td className="px-6 py-4">
-                                        <p className="text-[13px] font-bold text-[var(--text-main)]">{h.symbol}</p>
+                                <tr key={h.symbol} className="hover:bg-[var(--bg-primary)]/30 transition-all cursor-pointer group">
+                                    <td className="px-8 py-5">
+                                        <p className="text-[14px] font-bold text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">{h.symbol}</p>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <p className="text-[13px] font-medium text-[var(--text-main)]">{h.allocation}%</p>
+                                    <td className="px-8 py-5 text-right">
+                                        <p className="text-[14px] font-medium text-[var(--text-main)]">{h.allocation}%</p>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <p className="text-[13px] font-medium text-[var(--text-main)]">
+                                    <td className="px-8 py-5 text-right">
+                                        <p className="text-[14px] font-medium text-[var(--text-main)]">
                                             {formatCurrency(h.value, selectedCurrency, getRate(selectedCurrency), 0)}
                                         </p>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <span className={`text-[12px] font-bold ${h.pl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                    <td className="px-8 py-5 text-right">
+                                        <span className={`text-[13px] font-bold ${h.pl >= 0 ? 'text-emerald-500/90' : 'text-rose-500/90'}`}>
                                             {h.pl >= 0 ? '+' : ''}{h.plPercent}%
                                         </span>
                                     </td>

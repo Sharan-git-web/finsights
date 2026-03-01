@@ -212,69 +212,67 @@ export default function Expenses({ theme }) {
                 {/* Right Column: Analytics and List */}
                 <div className="lg:col-span-7 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-[var(--bg-card)] p-6 rounded-[2.5rem] border border-slate-200 dark:border-[var(--border-color)] shadow-xl flex flex-col h-[440px] hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group">
-                            <h3 className="text-lg font-black text-[var(--text-main)] flex items-center gap-3 mb-6">
-                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-2xl text-[var(--accent-primary)]">
-                                    <PieChartIcon size={22} />
+                        <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] flex flex-col h-[460px] transition-all duration-300 group">
+                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3 mb-8">
+                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
+                                    <PieChartIcon size={20} />
                                 </div>
-                                <span className="tracking-tight">Spending Analysis</span>
+                                <span>Spending Analysis</span>
                             </h3>
                             <div className="flex-1 w-full relative">
                                 {chartData.length > 0 ? (
                                     <>
-                                        <ResponsiveContainer width="100%" height="85%">
+                                        <ResponsiveContainer width="100%" height="80%">
                                             <PieChart>
                                                 <Pie
                                                     data={chartData}
                                                     cx="50%"
                                                     cy="50%"
-                                                    innerRadius={80}
-                                                    outerRadius={110}
-                                                    paddingAngle={6}
+                                                    innerRadius={75}
+                                                    outerRadius={100}
+                                                    paddingAngle={4}
                                                     dataKey="value"
                                                     stroke="none"
-                                                    animationBegin={0}
-                                                    animationDuration={1200}
+                                                    animationDuration={1500}
                                                 >
                                                     {chartData.map((entry, index) => (
                                                         <Cell
                                                             key={`cell-${index}`}
                                                             fill={COLORS[index % COLORS.length]}
-                                                            className="hover:opacity-90 transition-opacity cursor-pointer outline-none"
+                                                            className="hover:opacity-80 transition-opacity cursor-pointer outline-none"
                                                         />
                                                     ))}
                                                 </Pie>
                                                 <RechartsTooltip
                                                     contentStyle={{
-                                                        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                                        backdropFilter: 'blur(10px)',
-                                                        borderColor: 'transparent',
-                                                        borderRadius: '20px',
-                                                        boxShadow: '0 20px 40px -10px rgba(0,0,0,0.1)',
-                                                        padding: '12px 16px'
+                                                        backgroundColor: 'var(--bg-card)',
+                                                        borderColor: 'var(--border-color)',
+                                                        borderRadius: '12px',
+                                                        boxShadow: '0 10px 15px -3px rgba(0,0,0,0.3)',
+                                                        padding: '12px'
                                                     }}
-                                                    itemStyle={{ color: '#1e293b', fontSize: '13px', fontWeight: '800' }}
+                                                    itemStyle={{ color: 'var(--text-main)', fontSize: '12px', fontWeight: 'bold' }}
                                                 />
                                             </PieChart>
                                         </ResponsiveContainer>
                                         {/* Center Total Label */}
-                                        <div className="absolute top-[42.5%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                                            <p className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-widest mb-0.5">Total Monthly Spend</p>
-                                            <p className="text-xl font-black text-[var(--text-main)] tracking-tighter">
+                                        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+                                            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-1">TOTAL spend</p>
+                                            <p className="text-2xl font-bold text-[var(--text-main)] tracking-tight">
                                                 {formatCurrency(totalSpent, selectedCurrency, currentRate).split('.')[0]}
                                             </p>
                                         </div>
-                                        <div className="flex flex-wrap items-center justify-center gap-4 mt-2 px-2">
+                                        <div className="flex flex-wrap items-center justify-center gap-3 mt-4 px-2">
                                             {chartData.slice(0, 3).map((entry, index) => (
-                                                <div key={entry.name} className="flex items-center gap-1.5">
-                                                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                                                    <span className="text-[10px] font-black text-[var(--text-muted)] uppercase tracking-wider">{entry.name}</span>
+                                                <div key={entry.name} className="flex items-center gap-2">
+                                                    <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                                                    <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">{entry.name}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     </>
                                 ) : (
-                                    <div className="flex items-center justify-center h-full text-[var(--text-muted)] font-medium italic">
+                                    <div className="flex items-center justify-center h-full text-[var(--text-muted)] font-medium italic opacity-50">
                                         No spending data yet
                                     </div>
                                 )}
@@ -282,40 +280,39 @@ export default function Expenses({ theme }) {
                         </div>
 
                         {/* Summary List Card */}
-                        <div className="bg-[var(--bg-card)] p-6 rounded-[2.5rem] border border-slate-200 dark:border-[var(--border-color)] shadow-xl flex flex-col h-[440px] hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                            <h3 className="text-lg font-black text-[var(--text-main)] flex items-center gap-3 mb-6">
-                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-2xl text-[var(--accent-primary)]">
-                                    <List size={22} />
+                        <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] flex flex-col h-[460px] transition-all duration-300">
+                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3 mb-8">
+                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
+                                    <List size={20} />
                                 </div>
-                                <span className="tracking-tight">Top Categories</span>
+                                <span>Top Categories</span>
                             </h3>
                             <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
                                 {([...chartData]).sort((a, b) => b.value - a.value).slice(0, 5).map((cat, idx) => (
-                                    <div key={cat.name} className="group/cat flex flex-col gap-2.5 hover:translate-x-1 transition-transform duration-200">
-                                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.15em]">
+                                    <div key={cat.name} className="group/cat flex flex-col gap-2.5">
+                                        <div className="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider">
                                             <div className="flex items-center gap-2.5">
-                                                <div className="w-2.5 h-2.5 rounded-full shadow-sm ring-2 ring-white" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
-                                                <span className="text-[var(--text-main)] group-hover/cat:text-[var(--accent-primary)] transition-colors duration-200">{cat.name}</span>
+                                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
+                                                <span className="text-[var(--text-main)] opacity-90">{cat.name}</span>
                                             </div>
-                                            <div className="flex items-center gap-3">
-                                                <span className="text-[var(--text-muted)] opacity-60 font-black">{((cat.value / totalSpent) * 100).toFixed(0)}%</span>
-                                                <span className="text-[var(--text-main)] tracking-tight">{formatCurrency(cat.value, selectedCurrency, currentRate)}</span>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[var(--text-muted)] opacity-60 font-bold">{((cat.value / totalSpent) * 100).toFixed(0)}%</span>
+                                                <span className="text-[var(--text-main)]">{formatCurrency(cat.value, selectedCurrency, currentRate)}</span>
                                             </div>
                                         </div>
-                                        <div className="h-1 w-full bg-slate-100 dark:bg-[var(--bg-primary)] rounded-full overflow-hidden">
+                                        <div className="h-1 w-full bg-[var(--bg-primary)] rounded-full overflow-hidden">
                                             <div
-                                                className="h-full rounded-full transition-all duration-1200 ease-in-out"
+                                                className="h-full rounded-full transition-all duration-1000"
                                                 style={{
                                                     width: `${(cat.value / totalSpent) * 100}%`,
-                                                    backgroundColor: COLORS[idx % COLORS.length],
-                                                    boxShadow: `0 0 10px ${COLORS[idx % COLORS.length]}66`
+                                                    backgroundColor: COLORS[idx % COLORS.length]
                                                 }}
                                             />
                                         </div>
                                     </div>
                                 ))}
                                 {chartData.length === 0 && (
-                                    <div className="flex items-center justify-center h-full text-[var(--text-muted)] font-medium italic">
+                                    <div className="flex items-center justify-center h-full text-[var(--text-muted)] font-medium italic opacity-50">
                                         No data available
                                     </div>
                                 )}
@@ -324,26 +321,25 @@ export default function Expenses({ theme }) {
                     </div>
 
                     {/* Recent Activity Card */}
-                    <div className="bg-[var(--bg-card)] p-8 rounded-[2.5rem] border border-slate-200 dark:border-[var(--border-color)] shadow-xl space-y-8 hover:shadow-2xl transition-all duration-300">
+                    <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] space-y-8">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-xl font-black text-[var(--text-main)] flex items-center gap-3">
-                                <div className="p-3 bg-slate-50 dark:bg-[var(--bg-primary)] rounded-2xl text-[var(--accent-primary)] border border-slate-100 dark:border-[var(--border-color)] shadow-sm">
-                                    <List size={22} />
+                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3">
+                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
+                                    <List size={20} />
                                 </div>
                                 <span>Recent Transitions</span>
                             </h3>
-                            <div className="flex items-center gap-2 bg-slate-50 dark:bg-[var(--bg-primary)] px-4 py-1.5 rounded-2xl border border-slate-100 dark:border-[var(--border-color)]">
-                                <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[var(--text-muted)]">
-                                    Total {expenses.length} Records
+                            <div className="px-3 py-1 bg-[var(--bg-primary)] rounded-full border border-[var(--border-color)]">
+                                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] opacity-60">
+                                    {expenses.length} Records
                                 </span>
                             </div>
                         </div>
-                        <div className="overflow-x-auto custom-scrollbar">
-                            <table className="w-full text-left border-separate border-spacing-y-2">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
                                 <thead>
-                                    <tr className="text-[var(--text-muted)] text-[10px] font-black uppercase tracking-[0.2em]">
-                                        <th className="pb-4 px-4">Transaction detail</th>
+                                    <tr className="text-[var(--text-muted)] text-[10px] font-bold uppercase tracking-widest border-b border-[var(--border-color)]">
+                                        <th className="pb-4 px-4">Detail</th>
                                         <th className="pb-4 px-4">Category</th>
                                         <th className="pb-4 px-4 text-right">Amount</th>
                                         <th className="pb-4 px-4 text-center">Action</th>
@@ -351,47 +347,47 @@ export default function Expenses({ theme }) {
                                 </thead>
                                 <tbody>
                                     {expenses.map((exp) => (
-                                        <tr key={exp.id} className="group hover:bg-slate-50 dark:hover:bg-[var(--bg-primary)]/40 transition-all duration-200">
-                                            <td className="py-5 px-4 first:rounded-l-[1.5rem] border-y border-l border-transparent group-hover:border-slate-100 dark:group-hover:border-[var(--border-color)] transition-all duration-200">
-                                                <div className="flex flex-col gap-0.5">
-                                                    <span className="font-extrabold text-sm text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors duration-200 leading-none">{exp.description}</span>
-                                                    <span className="text-[10px] text-[var(--text-muted)] font-black uppercase tracking-[0.05em] opacity-60">
-                                                        {new Date(exp.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                        <tr key={exp.id} className="group hover:bg-[var(--bg-primary)]/50 transition-all border-b border-[var(--border-color)]/30 last:border-0">
+                                            <td className="py-4 px-4">
+                                                <div className="flex flex-col">
+                                                    <span className="font-bold text-[13px] text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">{exp.description}</span>
+                                                    <span className="text-[10px] text-[var(--text-muted)] opacity-50">
+                                                        {new Date(exp.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="py-5 px-4 border-y border-transparent group-hover:border-slate-100 dark:group-hover:border-[var(--border-color)] transition-all duration-200">
-                                                <span className={`px-3.5 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] border transition-all duration-200
-                                                    ${exp.category === 'Food' ? 'bg-amber-50 text-amber-600 border-amber-100 shadow-sm' :
-                                                        exp.category === 'Shopping' ? 'bg-rose-50 text-rose-600 border-rose-100 shadow-sm' :
-                                                            exp.category === 'Bills' ? 'bg-blue-50 text-blue-600 border-blue-100 shadow-sm' :
-                                                                'bg-slate-50 text-slate-600 border-slate-100 shadow-sm'}
+                                            <td className="py-4 px-4">
+                                                <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border
+                                                    ${exp.category === 'Food' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
+                                                        exp.category === 'Shopping' ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' :
+                                                            exp.category === 'Bills' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
+                                                                'bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border-[var(--accent-primary)]/20'}
                                                 `}>
                                                     {exp.category}
                                                 </span>
                                             </td>
-                                            <td className="py-5 px-4 text-right font-black text-[var(--text-main)] border-y border-transparent group-hover:border-slate-100 dark:group-hover:border-[var(--border-color)] tabular-nums text-sm transition-all duration-200">
+                                            <td className="py-4 px-4 text-right font-bold text-[13px] text-[var(--text-main)] tabular-nums">
                                                 {formatCurrency(exp.amount, selectedCurrency, currentRate)}
                                             </td>
-                                            <td className="py-5 px-4 text-center last:rounded-r-[1.5rem] border-y border-r border-transparent group-hover:border-slate-100 dark:group-hover:border-[var(--border-color)] transition-all duration-200">
+                                            <td className="py-4 px-4 text-center">
                                                 <button
                                                     onClick={() => handleDeleteExpense(exp.id)}
                                                     disabled={isDeleting === exp.id}
-                                                    className="p-2.5 text-slate-400 hover:text-red-500 hover:bg-red-50 hover:shadow-sm rounded-xl transition-all duration-200 active:scale-90 active:rotate-6 shadow-transparent"
+                                                    className="p-2 text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
                                                 >
-                                                    {isDeleting === exp.id ? <Loader2 className="animate-spin" size={19} /> : <Trash2 size={19} />}
+                                                    {isDeleting === exp.id ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />}
                                                 </button>
                                             </td>
                                         </tr>
                                     ))}
                                     {expenses.length === 0 && (
                                         <tr>
-                                            <td colSpan="4" className="py-16 text-center">
-                                                <div className="flex flex-col items-center gap-3 opacity-30 grayscale translate-y-2">
-                                                    <div className="p-5 bg-slate-50 rounded-full border-2 border-dashed border-slate-200">
-                                                        <CreditCard size={48} />
+                                            <td colSpan="4" className="py-20 text-center">
+                                                <div className="flex flex-col items-center gap-3 opacity-20">
+                                                    <div className="p-5 bg-[var(--bg-primary)] rounded-full border-2 border-dashed border-[var(--border-color)]">
+                                                        <CreditCard size={40} />
                                                     </div>
-                                                    <span className="text-xs font-black uppercase tracking-widest">Awaiting Transactions</span>
+                                                    <span className="text-[10px] font-bold uppercase tracking-widest">No transactions found</span>
                                                 </div>
                                             </td>
                                         </tr>

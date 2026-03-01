@@ -32,56 +32,56 @@ export default function Navbar({ theme, toggleTheme, onStockSelect }) {
                         <Globe size={14} className="text-[var(--text-muted)]" />
                         <span className="text-[13px] uppercase tracking-wide">{selectedCurrency}</span>
                     </button>
-                    <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-lg opacity-0 invisible group-hover/currency:opacity-100 group-hover/currency:visible transition-all duration-200 z-50 overflow-hidden">
+                    <div className="absolute right-0 top-full mt-1.5 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-2xl opacity-0 invisible group-hover/currency:opacity-100 group-hover/currency:visible transition-all duration-200 z-50 overflow-hidden">
                         <div className="py-1 max-h-64 overflow-y-auto no-scrollbar">
                             {supportedCurrencies.map((currency) => (
                                 <button
                                     key={currency.code}
                                     onClick={() => setSelectedCurrency(currency.code)}
-                                    className={`w-full px-4 py-2 text-left text-sm hover:bg-[var(--bg-primary)] transition-colors flex items-center justify-between ${selectedCurrency === currency.code ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/5 font-bold' : 'text-[var(--text-main)] font-medium'}`}
+                                    className={`w-full px-4 py-2.5 text-left text-[13px] hover:bg-[var(--bg-primary)] transition-colors flex items-center justify-between ${selectedCurrency === currency.code ? 'text-[var(--accent-primary)] bg-[var(--accent-primary)]/5 font-bold' : 'text-[var(--text-main)] font-medium'}`}
                                 >
                                     <span>{currency.name}</span>
-                                    <span className="text-[var(--text-muted)] text-[10px] uppercase">{currency.code}</span>
+                                    <span className="text-[var(--text-muted)] text-[10px] uppercase font-bold">{currency.code}</span>
                                 </button>
                             ))}
                         </div>
                     </div>
                 </div>
 
-                <div className="h-4 w-px bg-[var(--border-color)] mx-2"></div>
+                <div className="h-4 w-px bg-[var(--border-color)] mx-2 opacity-50"></div>
 
                 <button
                     onClick={toggleTheme}
-                    className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-primary)] transition-all duration-200 border border-transparent hover:border-[var(--border-color)]"
+                    className="p-2.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-primary)] transition-all duration-200 border border-[var(--border-color)]"
                     aria-label="Toggle theme"
                 >
-                    {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
+                    {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
                 </button>
 
-                <button className="relative p-2 rounded-lg text-[var(--text-muted)] transition-all duration-200 hover:bg-[var(--bg-primary)] hover:text-[var(--text-main)] border border-transparent hover:border-[var(--border-color)]">
-                    <Bell size={16} />
-                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full border border-[var(--bg-card)]"></span>
+                <button className="relative p-2.5 rounded-lg text-[var(--text-muted)] transition-all duration-200 hover:bg-[var(--bg-primary)] hover:text-[var(--text-main)] border border-[var(--border-color)]">
+                    <Bell size={15} />
+                    <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-red-500/80 rounded-full border border-[var(--bg-card)] shadow-[0_0_8px_rgba(239,68,68,0.3)]"></span>
                 </button>
 
-                <div className="h-4 w-px bg-[var(--border-color)] mx-2"></div>
+                <div className="h-4 w-px bg-[var(--border-color)] mx-2 opacity-50"></div>
 
                 <div className="relative group/profile">
                     <div className="flex items-center gap-3 pl-2 cursor-pointer group">
                         <div className="text-right hidden sm:block">
-                            <p className="text-[13px] font-bold text-[var(--text-main)] truncate max-w-[150px]">
+                            <p className="text-[13px] font-bold text-[var(--text-main)] truncate max-w-[150px] tracking-tight">
                                 {getUserName()}
                             </p>
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--accent-primary)] font-bold text-xs border border-[var(--accent-primary)]/20">
+                        <div className="w-9 h-9 rounded-full bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--accent-primary)] font-bold text-[11px] border border-[var(--accent-primary)]/20 shadow-lg shadow-[var(--accent-primary)]/5 transition-transform group-hover:scale-105">
                             {getInitials()}
                         </div>
                     </div>
 
-                    <div className="absolute right-0 top-full mt-1 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-lg opacity-0 invisible group-hover/profile:opacity-100 group-hover/profile:visible transition-all duration-200 z-50 overflow-hidden">
+                    <div className="absolute right-0 top-full mt-1.5 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-2xl opacity-0 invisible group-hover/profile:opacity-100 group-hover/profile:visible transition-all duration-200 z-50 overflow-hidden">
                         <div className="py-1">
                             <button
                                 onClick={signOut}
-                                className="w-full px-4 py-2 text-left text-[13px] hover:bg-rose-500/5 hover:text-rose-500 text-[var(--text-main)] font-semibold transition-colors flex items-center gap-3 group/btn"
+                                className="w-full px-4 py-2.5 text-left text-[13px] hover:bg-rose-500/5 hover:text-rose-500 text-[var(--text-main)] font-semibold transition-colors flex items-center gap-3 group/btn"
                             >
                                 <LogOut size={14} className="text-[var(--text-muted)] group-hover/btn:text-rose-500" />
                                 Sign Out
