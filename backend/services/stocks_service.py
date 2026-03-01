@@ -10,6 +10,20 @@ _cache: dict = {}
 CACHE_TTL = timedelta(minutes=5)
 
 
+import math
+
+def safe_float(val):
+    if val is None:
+        return None
+    try:
+        f = float(val)
+        if math.isnan(f) or math.isinf(f):
+            return None
+        return f
+    except (ValueError, TypeError):
+        return None
+
+
 def _slice_last_six_months(df: pd.DataFrame) -> pd.DataFrame:
     cutoff = datetime.now(timezone.utc) - timedelta(days=182)  # approx 6 months
     # Ensure index is timezone-aware if cutoff is
@@ -47,13 +61,13 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
             if len(last_6m) >= 2:
                 start_price = float(last_6m["Close"].iloc[0])
                 end_price = float(last_6m["Close"].iloc[-1])
-                perf_6m = float(((end_price - start_price) / start_price) * 100) if start_price != 0 else None
+                perf_6m = ((end_price - start_price) / start_price) * 100 if start_price != 0 else None
             else:
                 perf_6m = None
 
             # Historical data
             price_history_6m = [
-                {"date": idx.strftime("%Y-%m-%d"), "price": float(row["Close"])}
+                {"date": idx.strftime("%Y-%m-%d"), "price": safe_float(row["Close"])}
                 for idx, row in last_6m.iterrows()
             ]
 
@@ -72,18 +86,18 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
                 if div_rate and current_price:
                     dividend_yield = div_rate / current_price
 
-            high_52 = info.get("fiftyTwoWeekHigh") or getattr(fast, "year_high", None) or float(hist["High"].max()) if not hist.empty else None
-            low_52 = info.get("fiftyTwoWeekLow") or getattr(fast, "year_low", None) or float(hist["Low"].min()) if not hist.empty else None
+            high_52 = info.get("fiftyTwoWeekHigh") or getattr(fast, "year_high", None) or (float(hist["High"].max()) if not hist.empty else None)
+            low_52 = info.get("fiftyTwoWeekLow") or getattr(fast, "year_low", None) or (float(hist["Low"].min()) if not hist.empty else None)
 
             data = {
                 "symbol": symbol,
                 "currency": info.get("currency") or getattr(fast, "currency", "USD"),
-                "marketCap": float(market_cap) if market_cap else None,
-                "trailingPE": float(pe_ratio) if pe_ratio else None,
-                "dividendYield": float(dividend_yield) if dividend_yield else None,
-                "six_month_performance": float(perf_6m) if perf_6m is not None else None,
-                "fiftyTwoWeekHigh": float(high_52) if high_52 else None,
-                "fiftyTwoWeekLow": float(low_52) if low_52 else None,
+                "marketCap": safe_float(market_cap),
+                "trailingPE": safe_float(pe_ratio),
+                "dividendYield": safe_float(dividend_yield),
+                "six_month_performance": safe_float(perf_6m),
+                "fiftyTwoWeekHigh": safe_float(high_52),
+                "fiftyTwoWeekLow": safe_float(low_52),
                 "price_history_6m": price_history_6m
             }
             
@@ -126,7 +140,7 @@ def get_stock_insights(ticker_symbol: str) -> dict:
     last_6m = _slice_last_six_months(hist.copy())
 
     price_history_6m = [
-        {"date": idx.strftime("%Y-%m-%d"), "price": float(row["Close"])}
+        {"date": idx.strftime("%Y-%m-%d"), "price": safe_float(row["Close"])}
         for idx, row in last_6m.iterrows()
     ]
     volume_history = [
@@ -154,7 +168,7 @@ def get_stock_insights(ticker_symbol: str) -> dict:
         last_date = closes["Date"].iloc[-1]
         future_dates = [last_date + timedelta(days=i + 1) for i in range(30)]
         preds_list = [
-            {"date": d.strftime("%Y-%m-%d"), "predicted_price": float(p)}
+            {"date": d.strftime("%Y-%m-%d"), "predicted_price": safe_float(p)}
             for d, p in zip(future_dates, preds)
         ]
         avg_pred = float(np.mean(preds))
@@ -162,10 +176,10 @@ def get_stock_insights(ticker_symbol: str) -> dict:
     trend_signal = "Bullish" if avg_pred > last_close else "Bearish"
 
     response = {
-        "current_price": last_close,
-        "change_percent": round(change_percent, 2),
-        "52_week_high": high_52,
-        "52_week_low": low_52,
+        "current_price": safe_float(last_close),
+        "change_percent": safe_float(change_percent),
+        "52_week_high": safe_float(high_52),
+        "52_week_low": safe_float(low_52),
         "price_history_6m": price_history_6m,
         "volume_history": volume_history,
         "ml_prediction_30d": preds_list,
