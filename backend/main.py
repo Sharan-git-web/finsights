@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import portfolio, stocks, search, expenses, user, market
 
@@ -13,9 +13,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.options("/{path:path}")
-async def preflight_handler(path: str):
-    return Response(status_code=204)
 
 app.include_router(portfolio.router, prefix="/api/portfolio")
 app.include_router(stocks.router, prefix="/api/stocks")
