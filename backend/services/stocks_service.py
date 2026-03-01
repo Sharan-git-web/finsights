@@ -49,13 +49,22 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
 
         try:
             ticker = yf.Ticker(symbol)
-            info = ticker.info
+            
+            # 1. Fetch history (primary data source)
             hist: pd.DataFrame = ticker.history(period="1y")
 
-            if hist.empty or not info:
-                # Stock not found or no data
+            if hist.empty:
+                # Stock genuinely not found or no data
                 continue
 
+            # 2. Fetch metadata (less reliable due to rate limits)
+            try:
+                info = ticker.info
+            except Exception:
+                info = {}
+            
+            fast = ticker.fast_info
+            
             # 6-month performance
             last_6m = _slice_last_six_months(hist.copy())
             if len(last_6m) >= 2:
@@ -74,16 +83,13 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
                     for idx, row in last_6m.iterrows()
                 ]
 
-            fast = ticker.fast_info
-            
             # Safe extraction with fast_info fallbacks
             market_cap = info.get("marketCap") or getattr(fast, "market_cap", None)
             pe_ratio = info.get("trailingPE") or None
             
-            # Dividend yield calculation: fallback to rate / price if yield is missing
+            # Dividend yield calculation
             dividend_yield = info.get("dividendYield")
             if dividend_yield is None:
-                # calculate manually if possible
                 div_rate = info.get("dividendRate")
                 current_price = info.get("currentPrice") or getattr(fast, "last_price", None)
                 if div_rate and current_price:
@@ -108,7 +114,6 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
             results.append(data)
 
         except Exception as e:
-            # Skip failed tickers but log internally
             print(f"Error comparing {symbol}: {e}")
             continue
 
@@ -123,12 +128,14 @@ def get_stock_insights(ticker_symbol: str) -> dict:
 
     try:
         ticker = yf.Ticker(ticker_symbol)
+        
+        # 1. Fetch history (primary source)
         hist: pd.DataFrame = ticker.history(period="1y")
     except Exception as exc:
-        raise ValueError("Failed to fetch data from yfinance")
+        raise ValueError(f"Failed to fetch data for {ticker_symbol}: {exc}")
 
     if hist.empty:
-        raise ValueError("Ticker symbol not found or no historical data")
+        raise ValueError(f"Ticker symbol {ticker_symbol} not found or no historical data")
 
     # compute current price information
     try:
