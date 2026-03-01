@@ -25,10 +25,8 @@ export default function Landing() {
             <nav className="fixed top-0 w-full z-50 bg-[#020617]/80 backdrop-blur-xl border-b border-slate-800/50">
                 <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <TrendingUp size={22} className="text-white" />
-                        </div>
-                        <h1 className="text-2xl font-black tracking-tighter uppercase">
+                        <img src="/logo.jpg" alt="Finsights Logo" className="w-10 h-10 object-cover bg-slate-900 rounded-xl shadow-lg shadow-purple-500/20" />
+                        <h1 className="text-2xl font-black tracking-tighter uppercase mt-1">
                             FINSIGHTS
                         </h1>
                     </div>

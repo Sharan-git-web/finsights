@@ -59,10 +59,8 @@ export default function Sidebar({ isOpen, setIsOpen, theme }) {
         >
             <div className={`h-20 flex items-center border-b border-[var(--border-color)] px-5 transition-all duration-300 ${isOpen ? 'justify-between' : 'justify-center'}`}>
                 <div className={`flex items-center gap-3 transition-opacity duration-300 ${isOpen ? 'opacity-100 w-auto' : 'opacity-0 w-0 overflow-hidden'}`}>
-                    <div className="w-8 h-8 bg-gradient-to-br from-[#A855F7] to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <TrendingUp size={18} className="text-white" />
-                    </div>
-                    <h1 className="text-xl font-black tracking-tighter text-[var(--text-main)]">
+                    <img src="/logo.jpg" alt="Finsights Logo" className="w-8 h-8 object-cover bg-slate-900 rounded-xl shadow-lg shadow-purple-500/20" />
+                    <h1 className="text-xl font-black tracking-tighter text-[var(--text-main)] mt-1">
                         FINSIGHTS
                     </h1>
                 </div>
