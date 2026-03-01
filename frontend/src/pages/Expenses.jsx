@@ -141,12 +141,12 @@ export default function Expenses({ theme }) {
                 {/* Left Column: Form and KPI */}
                 <div className="lg:col-span-5 space-y-6">
                     {/* Add Expense Card */}
-                    <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] shadow-xl space-y-8">
-                        <h2 className="text-xl font-black text-[var(--text-main)] flex items-center gap-3">
-                            <Plus size={24} className="text-[var(--accent-primary)]" />
+                    <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--border-color)] space-y-6">
+                        <h2 className="text-lg font-bold text-[var(--text-main)] flex items-center gap-3">
+                            <Plus size={20} className="text-[var(--accent-primary)]" />
                             Add Expense
                         </h2>
-                        <form onSubmit={handleAddExpense} className="space-y-5">
+                        <form onSubmit={handleAddExpense} className="space-y-4">
                             <Input
                                 label="Description"
                                 type="text"
@@ -155,7 +155,7 @@ export default function Expenses({ theme }) {
                                 placeholder="e.g. Weekly Groceries"
                                 required
                             />
-                            <div className="grid grid-cols-2 gap-5">
+                            <div className="grid grid-cols-2 gap-4">
                                 <Input
                                     label={`Amount (${selectedCurrency})`}
                                     type="number"
@@ -163,7 +163,6 @@ export default function Expenses({ theme }) {
                                     onChange={setAmount}
                                     placeholder="0.00"
                                     required
-                                    prefix={<IndianRupee size={16} className="text-slate-400" />}
                                 />
                                 <Select
                                     label="Category"
@@ -175,60 +174,36 @@ export default function Expenses({ theme }) {
                             <button
                                 type="submit"
                                 disabled={isAdding}
-                                className="w-full bg-[var(--accent-primary)] text-white font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[var(--accent-primary)]/25 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full bg-[var(--accent-primary)] text-white font-bold py-3 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                             >
-                                {isAdding ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
+                                {isAdding ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
                                 {isAdding ? 'Adding...' : 'Add Expense'}
                             </button>
-                            {successMessage && (
-                                <p className="text-emerald-500 text-center font-bold text-sm animate-bounce">
-                                    {successMessage}
-                                </p>
-                            )}
                         </form>
                     </div>
 
-                    {/* Total Spent Card */}
-                    <div className="bg-gradient-to-br from-[#6366f1] via-[#4f46e5] to-[#4338ca] p-8 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group hover:-translate-y-1 hover:shadow-indigo-500/30 transition-all duration-300">
-                        {/* Background Decoration */}
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full -mr-24 -mt-24 blur-3xl animate-pulse" />
-                        <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-400/10 rounded-full -ml-16 -mb-16 blur-2xl" />
+                    {/* Total Spent Card - Clean Minimal Version */}
+                    <div className="bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border-color)] relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-primary)]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
 
-                        {/* Glass Overlay Pattern */}
-                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '24px 24px' }} />
-
-                        <div className="relative z-10 h-full flex flex-col justify-between">
-                            <div>
-                                <div className="flex justify-between items-start mb-8">
-                                    <div className="p-3.5 bg-white/10 rounded-2xl backdrop-blur-xl border border-white/20 shadow-inner">
-                                        <CreditCard size={26} className="text-white" />
-                                    </div>
-                                    <div className="flex flex-col items-end gap-1">
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 text-white rounded-full text-[10px] font-black uppercase tracking-wider backdrop-blur-md border border-white/10">
-                                            <TrendingUp size={12} className="text-emerald-400" />
-                                            <span>Target: ₹80k</span>
-                                        </div>
-                                    </div>
+                        <div className="relative z-10">
+                            <div className="flex justify-between items-start mb-6">
+                                <div className="p-3 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
+                                    <CreditCard size={20} />
                                 </div>
-                                <p className="text-indigo-100/60 text-[10px] font-black uppercase tracking-[0.25em] mb-2 ml-1">Total Monthly Spend</p>
-                                <h2 className="text-6xl font-black mb-2 tracking-tighter flex items-center gap-1.5 drop-shadow-sm">
-                                    {formatCurrency(totalSpent, selectedCurrency, currentRate).split('.')[0]}
-                                    <span className="text-2xl opacity-40 font-bold">.{formatCurrency(totalSpent, selectedCurrency, currentRate).split('.')[1]}</span>
-                                </h2>
-                                <p className="text-indigo-100 text-[11px] font-bold mt-1 flex items-center gap-1.5 opacity-80">
-                                    <span className="text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded-md font-black">+12.5%</span>
-                                    from last month
-                                </p>
+                                <div className="px-3 py-1 bg-[var(--bg-primary)] text-[var(--text-muted)] rounded-full text-[10px] font-bold uppercase tracking-wider border border-[var(--border-color)]">
+                                    Target: ₹80k
+                                </div>
                             </div>
 
-                            <div className="flex items-center justify-between pt-10 border-t border-white/10 mt-auto">
-                                <div className="flex items-center gap-2.5 text-indigo-100 text-[10px] font-bold group/sync">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                                    <span className="tracking-wide uppercase">Live Insights Active</span>
-                                </div>
-                                <div className="p-2 bg-white/10 rounded-full group-hover:bg-white group-hover:text-indigo-600 transition-all duration-300">
-                                    <ArrowUpRight size={18} />
-                                </div>
+                            <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Total Monthly Spend</p>
+                            <h2 className="text-4xl font-bold text-[var(--text-main)] tracking-tight">
+                                {formatCurrency(totalSpent, selectedCurrency, currentRate)}
+                            </h2>
+
+                            <div className="flex items-center gap-2 mt-4">
+                                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">+12.5%</span>
+                                <span className="text-[11px] text-[var(--text-muted)] font-medium">from last month</span>
                             </div>
                         </div>
                     </div>

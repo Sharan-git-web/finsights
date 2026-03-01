@@ -4,33 +4,30 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --bg-primary: #F8FAFC;
+  --bg-primary: #F9FAFB;
+  /* Off-white */
   --bg-card: #FFFFFF;
-  --text-main: #0F172A;
-  --text-muted: #64748B;
-  --border-color: #E2E8F0;
-  --accent-primary: #8B5CF6;
-  /* Violet-500 */
-  --accent-secondary: #06B6D4;
-  /* Cyan-500 */
+  --text-main: #111827;
+  /* Gray-900 */
+  --text-muted: #6B7280;
+  /* Gray-500 */
+  --border-color: #F1F5F9;
+  /* Slate-100 */
+  --accent-primary: #6366F1;
+  /* Indigo-500 - Soft Indigo */
   --success: #10B981;
+  --warning: #F59E0B;
   --danger: #EF4444;
 }
 
 .dark {
-  --bg-primary: #020617;
-  /* Slate-950 */
-  --bg-card: #0F172A;
-  /* Slate-900 */
+  --bg-primary: #0F172A;
+  --bg-card: #1E293B;
   --text-main: #F8FAFC;
-  /* Slate-50 */
   --text-muted: #94A3B8;
-  /* Slate-400 */
-  --border-color: rgba(255, 255, 255, 0.08);
-  --accent-primary: #A855F7;
-  /* Purple-500 */
-  --accent-secondary: #22D3EE;
-  /* Cyan-400 */
+  --border-color: rgba(255, 255, 255, 0.05);
+  --accent-primary: #818CF8;
+  /* Lighter soft indigo for dark mode */
 }
 
 @theme {
