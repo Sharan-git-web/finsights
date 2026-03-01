@@ -66,10 +66,13 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
                 perf_6m = None
 
             # Historical data
-            price_history_6m = [
-                {"date": idx.strftime("%Y-%m-%d"), "price": safe_float(row["Close"])}
-                for idx, row in last_6m.iterrows()
-            ]
+            if last_6m.empty:
+                price_history_6m = []
+            else:
+                price_history_6m = [
+                    {"date": idx.strftime("%Y-%m-%d"), "price": safe_float(row["Close"])}
+                    for idx, row in last_6m.iterrows()
+                ]
 
             fast = ticker.fast_info
             

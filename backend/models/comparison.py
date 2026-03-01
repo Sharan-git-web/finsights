@@ -8,7 +8,7 @@ class ComparisonRequest(BaseModel):
 
 class ComparisonPricePoint(BaseModel):
     date: str
-    price: float
+    price: Optional[float] = None
 
 
 class StockComparisonData(BaseModel):
