@@ -70,9 +70,14 @@ function App() {
                   theme={theme}
                 />
 
-                <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-20'} h-screen`}>
-                  <Navbar theme={theme} toggleTheme={toggleTheme} onStockSelect={handleStockSelect} />
-                  <main className="flex-1 overflow-y-auto p-6 scroll-smooth no-scrollbar">
+                <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'md:ml-20'} h-screen w-full`}>
+                  <Navbar
+                    theme={theme}
+                    toggleTheme={toggleTheme}
+                    onStockSelect={handleStockSelect}
+                    toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+                  />
+                  <main className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth no-scrollbar w-full">
                     <Routes>
                       <Route path="/dashboard" element={<Dashboard theme={theme} />} />
                       <Route path="/stockinsights" element={<StockInsights theme={theme} selectedTicker={selectedTicker} />} />

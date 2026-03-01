@@ -1,8 +1,8 @@
-import { Bell, Sun, Moon, Globe, LogOut } from 'lucide-react';
+import { Bell, Sun, Moon, Globe, LogOut, Menu } from 'lucide-react';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
 
-export default function Navbar({ theme, toggleTheme, onStockSelect }) {
+export default function Navbar({ theme, toggleTheme, toggleSidebar, onStockSelect }) {
     const { selectedCurrency, setSelectedCurrency, supportedCurrencies } = useCurrency();
     const { user, signOut } = useAuth();
 
@@ -19,18 +19,27 @@ export default function Navbar({ theme, toggleTheme, onStockSelect }) {
     };
 
     return (
-        <nav className="h-16 bg-[var(--bg-card)] border-b border-[var(--border-color)] px-8 flex items-center justify-between transition-colors duration-300 sticky top-0 z-50">
-            <div className="flex-1 max-w-xl">
+        <nav className="h-16 bg-[var(--bg-card)] border-b border-[var(--border-color)] px-4 md:px-8 flex items-center justify-between transition-colors duration-300 sticky top-0 z-50">
+            <div className="flex items-center gap-4">
+                <button
+                    onClick={toggleSidebar}
+                    className="md:hidden p-2 rounded-lg text-[var(--text-muted)] hover:bg-[var(--bg-primary)] border border-[var(--border-color)]"
+                    aria-label="Toggle menu"
+                >
+                    <Menu size={20} />
+                </button>
+                <div className="hidden md:flex flex-1 max-w-xl">
+                </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 md:gap-2">
                 <div className="relative group/currency">
                     <button
-                        className="px-3 py-1.5 rounded-lg text-[var(--text-main)] hover:bg-[var(--bg-primary)] transition-all duration-200 font-semibold border border-[var(--border-color)] flex items-center gap-2"
+                        className="px-2 md:px-3 py-1.5 rounded-lg text-[var(--text-main)] hover:bg-[var(--bg-primary)] transition-all duration-200 font-semibold border border-[var(--border-color)] flex items-center gap-1.5 md:gap-2"
                         aria-label="Select currency"
                     >
                         <Globe size={14} className="text-[var(--text-muted)]" />
-                        <span className="text-[13px] uppercase tracking-wide">{selectedCurrency}</span>
+                        <span className="text-[11px] md:text-[13px] uppercase tracking-wide">{selectedCurrency}</span>
                     </button>
                     <div className="absolute right-0 top-full mt-1.5 w-48 bg-[var(--bg-card)] border border-[var(--border-color)] rounded-xl shadow-2xl opacity-0 invisible group-hover/currency:opacity-100 group-hover/currency:visible transition-all duration-200 z-50 overflow-hidden">
                         <div className="py-1 max-h-64 overflow-y-auto no-scrollbar">
@@ -48,31 +57,31 @@ export default function Navbar({ theme, toggleTheme, onStockSelect }) {
                     </div>
                 </div>
 
-                <div className="h-4 w-px bg-[var(--border-color)] mx-2 opacity-50"></div>
+                <div className="hidden sm:block h-4 w-px bg-[var(--border-color)] mx-1 opacity-50"></div>
 
                 <button
                     onClick={toggleTheme}
-                    className="p-2.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-primary)] transition-all duration-200 border border-[var(--border-color)]"
+                    className="p-2 md:p-2.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:bg-[var(--bg-primary)] transition-all duration-200 border border-[var(--border-color)]"
                     aria-label="Toggle theme"
                 >
                     {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
                 </button>
 
-                <button className="relative p-2.5 rounded-lg text-[var(--text-muted)] transition-all duration-200 hover:bg-[var(--bg-primary)] hover:text-[var(--text-main)] border border-[var(--border-color)]">
+                <button className="relative p-2 md:p-2.5 rounded-lg text-[var(--text-muted)] transition-all duration-200 hover:bg-[var(--bg-primary)] hover:text-[var(--text-main)] border border-[var(--border-color)]">
                     <Bell size={15} />
                     <span className="absolute top-2.5 right-2.5 w-1.5 h-1.5 bg-red-500/80 rounded-full border border-[var(--bg-card)] shadow-[0_0_8px_rgba(239,68,68,0.3)]"></span>
                 </button>
 
-                <div className="h-4 w-px bg-[var(--border-color)] mx-2 opacity-50"></div>
+                <div className="h-4 w-px bg-[var(--border-color)] mx-1 opacity-50"></div>
 
                 <div className="relative group/profile">
-                    <div className="flex items-center gap-3 pl-2 cursor-pointer group">
-                        <div className="text-right hidden sm:block">
+                    <div className="flex items-center gap-2 md:gap-3 px-1.5 md:pl-2 cursor-pointer group">
+                        <div className="text-right hidden lg:block">
                             <p className="text-[13px] font-bold text-[var(--text-main)] truncate max-w-[150px] tracking-tight">
                                 {getUserName()}
                             </p>
                         </div>
-                        <div className="w-9 h-9 rounded-full bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--accent-primary)] font-bold text-[11px] border border-[var(--accent-primary)]/20 shadow-lg shadow-[var(--accent-primary)]/5 transition-transform group-hover:scale-105">
+                        <div className="w-8 h-8 md:w-9 md:h-9 rounded-full bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--accent-primary)] font-bold text-[10px] md:text-[11px] border border-[var(--accent-primary)]/20 shadow-lg shadow-[var(--accent-primary)]/5 transition-transform group-hover:scale-105">
                             {getInitials()}
                         </div>
                     </div>

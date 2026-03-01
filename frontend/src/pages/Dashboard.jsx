@@ -92,10 +92,10 @@ export default function Dashboard() {
     );
 
     return (
-        <div className="max-w-[1400px] mx-auto space-y-6 pb-10">
+        <div className="max-w-[1400px] mx-auto space-y-4 md:space-y-6 pb-10 px-0 md:px-2">
 
             {/* Top Section: Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                 <StatCard
                     label="Total Portfolio Value"
                     value={formatCurrency(portfolioData?.totalValue, selectedCurrency, getRate(selectedCurrency))}
@@ -120,32 +120,32 @@ export default function Dashboard() {
             </div>
 
             {/* Middle Section: Chart and Portfolio Summary */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
 
                 {/* Chart Section */}
-                <div className="lg:col-span-2 bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border-color)] relative overflow-hidden">
-                    <div className="flex justify-between items-start mb-10">
+                <div className="lg:col-span-2 bg-[var(--bg-card)] p-5 md:p-8 rounded-xl border border-[var(--border-color)] relative overflow-hidden">
+                    <div className="flex justify-between items-start mb-6 md:mb-10">
                         <div>
-                            <h3 className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mb-2">Portfolio Growth</h3>
-                            <p className="text-xl font-bold text-[var(--text-main)]">Since {formattedSignupDate}</p>
+                            <h3 className="text-[10px] md:text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mb-1 md:mb-2">Portfolio Growth</h3>
+                            <p className="text-lg md:text-xl font-bold text-[var(--text-main)]">Since {formattedSignupDate}</p>
                         </div>
                         <div className="text-right">
-                            <p className={`text-2xl font-bold ${growthPercent >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            <p className={`text-xl md:text-2xl font-bold ${growthPercent >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
                                 {growthPercent >= 0 ? '+' : ''}{growthPercent.toFixed(2)}%
                             </p>
-                            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mt-1">Total Performance</p>
+                            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mt-1">Performance</p>
                         </div>
                     </div>
 
-                    <div className="h-[300px] w-full">
+                    <div className="h-[250px] md:h-[300px] w-full">
                         {historyData.length < 2 ? (
-                            <div className="h-full w-full flex flex-col items-center justify-center text-center p-10 space-y-4">
-                                <div className="w-12 h-12 rounded-full bg-[var(--bg-primary)] flex items-center justify-center border border-[var(--border-color)]">
-                                    <TrendingUp size={20} className="text-[var(--text-muted)] opacity-50" />
+                            <div className="h-full w-full flex flex-col items-center justify-center text-center p-6 md:p-10 space-y-4">
+                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[var(--bg-primary)] flex items-center justify-center border border-[var(--border-color)]">
+                                    <TrendingUp size={18} className="text-[var(--text-muted)] opacity-50" />
                                 </div>
                                 <div>
                                     <p className="text-[var(--text-main)] font-bold text-sm tracking-tight text-muji leading-relaxed">Tracking started today.</p>
-                                    <p className="text-[var(--text-muted)] text-[11px] mt-1">Growth data will appear soon as markets move.</p>
+                                    <p className="text-[var(--text-muted)] text-[10px] md:text-[11px] mt-1">Growth data will appear soon.</p>
                                 </div>
                             </div>
                         ) : (
@@ -165,7 +165,7 @@ export default function Dashboard() {
                                         tickLine={false}
                                         tick={{ fill: 'var(--text-muted)', fontSize: 9, fontWeight: 600 }}
                                         tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
-                                        width={40}
+                                        width={35}
                                     />
                                     <RechartsTooltip
                                         cursor={{ stroke: 'var(--accent-primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
@@ -196,29 +196,29 @@ export default function Dashboard() {
                 </div>
 
                 {/* Portfolio Summary / Alerts */}
-                <div className="space-y-4">
-                    <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest px-2">Portfolio Summary</h3>
+                <div className="space-y-3 md:space-y-4">
+                    <h3 className="text-[12px] md:text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest px-2">Portfolio Summary</h3>
 
-                    <div className="bg-[var(--bg-card)] border-l-2 border-orange-500/50 p-5 rounded-r-xl border-y border-r border-[var(--border-color)] flex gap-4 transition-all hover:bg-[var(--bg-primary)]/40">
+                    <div className="bg-[var(--bg-card)] border-l-2 border-orange-500/50 p-4 md:p-5 rounded-r-xl border-y border-r border-[var(--border-color)] flex gap-3 md:gap-4 transition-all hover:bg-[var(--bg-primary)]/40">
                         <div className="w-8 h-8 rounded-full bg-orange-500/10 flex items-center justify-center flex-shrink-0">
                             <AlertCircle size={16} className="text-orange-500/80" />
                         </div>
                         <div>
-                            <p className="text-[13px] font-bold text-orange-900 dark:text-orange-100">Portfolio is concentrated</p>
-                            <p className="text-xs text-orange-700 dark:text-orange-300 mt-1">47% in one stock. Suggest rebalancing ₹1,60,000 to reduce risk.</p>
-                            <button className="text-[11px] font-bold text-orange-600 dark:text-orange-400 mt-3 flex items-center gap-1 hover:underline">
+                            <p className="text-[12px] md:text-[13px] font-bold text-orange-900 dark:text-orange-100">Portfolio is concentrated</p>
+                            <p className="text-[11px] md:text-xs text-orange-700 dark:text-orange-300 mt-1">47% in one stock. Suggest rebalancing to reduce risk.</p>
+                            <button className="text-[10px] md:text-[11px] font-bold text-orange-600 dark:text-orange-400 mt-2 md:mt-3 flex items-center gap-1 hover:underline">
                                 View Plan <ArrowUpRight size={12} />
                             </button>
                         </div>
                     </div>
 
-                    <div className="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-500/20 p-4 rounded-xl flex gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
-                            <Shield size={20} className="text-indigo-600 dark:text-indigo-400" />
+                    <div className="bg-indigo-50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-500/20 p-4 rounded-xl flex gap-3 md:gap-4">
+                        <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center flex-shrink-0">
+                            <Shield size={18} md:size={20} className="text-indigo-600 dark:text-indigo-400" />
                         </div>
                         <div>
-                            <p className="text-[13px] font-bold text-indigo-900 dark:text-indigo-100">Stability at 65%</p>
-                            <p className="text-xs text-indigo-700 dark:text-indigo-300 mt-1">Your current allocation aligns with a moderate growth strategy.</p>
+                            <p className="text-[12px] md:text-[13px] font-bold text-indigo-900 dark:text-indigo-100">Stability at 65%</p>
+                            <p className="text-[11px] md:text-xs text-indigo-700 dark:text-indigo-300 mt-1">Aligns with moderate growth strategy.</p>
                         </div>
                     </div>
                 </div>
@@ -226,8 +226,8 @@ export default function Dashboard() {
 
             {/* Bottom Section: Holdings Table */}
             <div className="bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)] overflow-hidden">
-                <div className="px-8 py-6 border-b border-[var(--border-color)] flex justify-between items-center">
-                    <h3 className="text-sm font-bold text-[var(--text-main)] uppercase tracking-widest">Asset Allocation</h3>
+                <div className="px-5 md:px-8 py-4 md:py-6 border-b border-[var(--border-color)] flex justify-between items-center">
+                    <h3 className="text-xs font-bold text-[var(--text-main)] uppercase tracking-widest">Asset Allocation</h3>
                     <button className="p-2 hover:bg-[var(--bg-primary)] rounded-lg text-[var(--text-muted)] transition-colors">
                         <MoreHorizontal size={18} />
                     </button>
@@ -236,28 +236,28 @@ export default function Dashboard() {
                     <table className="w-full">
                         <thead>
                             <tr className="bg-[var(--bg-primary)]/50 text-left">
-                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em]">Stock Asset</th>
-                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Allocation</th>
-                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Value</th>
-                                <th className="px-8 py-4 text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Performance</th>
+                                <th className="px-5 md:px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em]">Asset</th>
+                                <th className="px-5 md:px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Allocation</th>
+                                <th className="hidden sm:table-cell px-5 md:px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Value</th>
+                                <th className="px-5 md:px-8 py-3 md:py-4 text-[9px] md:text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] text-right">Perform.</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-[var(--border-color)]">
                             {portfolioData?.holdings?.map((h) => (
                                 <tr key={h.symbol} className="hover:bg-[var(--bg-primary)]/30 transition-all cursor-pointer group">
-                                    <td className="px-8 py-5">
-                                        <p className="text-[14px] font-bold text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">{h.symbol}</p>
+                                    <td className="px-5 md:px-8 py-4 md:py-5">
+                                        <p className="text-[13px] md:text-[14px] font-bold text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">{h.symbol}</p>
                                     </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <p className="text-[14px] font-medium text-[var(--text-main)]">{h.allocation}%</p>
+                                    <td className="px-5 md:px-8 py-4 md:py-5 text-right">
+                                        <p className="text-[13px] md:text-[14px] font-medium text-[var(--text-main)]">{h.allocation}%</p>
                                     </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <p className="text-[14px] font-medium text-[var(--text-main)]">
+                                    <td className="hidden sm:table-cell px-5 md:px-8 py-4 md:py-5 text-right">
+                                        <p className="text-[13px] md:text-[14px] font-medium text-[var(--text-main)]">
                                             {formatCurrency(h.value, selectedCurrency, getRate(selectedCurrency), 0)}
                                         </p>
                                     </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <span className={`text-[13px] font-bold ${h.pl >= 0 ? 'text-emerald-500/90' : 'text-rose-500/90'}`}>
+                                    <td className="px-5 md:px-8 py-4 md:py-5 text-right">
+                                        <span className={`text-[12px] md:text-[13px] font-bold ${h.pl >= 0 ? 'text-emerald-500/90' : 'text-rose-500/90'}`}>
                                             {h.pl >= 0 ? '+' : ''}{h.plPercent}%
                                         </span>
                                     </td>

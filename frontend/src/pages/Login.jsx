@@ -56,36 +56,36 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-4 md:p-6 relative overflow-hidden">
             {/* Background Glows */}
             <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full"></div>
             <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
 
-            <div className="w-full max-w-md space-y-8 relative z-10">
-                <div className="text-center space-y-6">
+            <div className="w-full max-w-md space-y-6 md:space-y-8 relative z-10">
+                <div className="text-center space-y-4 md:space-y-6">
                     <div className="flex items-center justify-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
-                            <TrendingUp size={22} className="text-white" />
+                        <div className="w-9 h-9 md:w-10 md:h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <TrendingUp size={20} md:size={22} className="text-white" />
                         </div>
-                        <h1 className="text-2xl font-black tracking-tighter text-white uppercase">
+                        <h1 className="text-xl md:text-2xl font-black tracking-tighter text-white uppercase">
                             FINSIGHTS
                         </h1>
                     </div>
                     <div className="space-y-1">
-                        <h2 className="text-3xl font-black text-white tracking-tight">Welcome Back</h2>
-                        <p className="text-slate-400 font-medium">Sign in to your account to continue</p>
+                        <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight">Welcome Back</h2>
+                        <p className="text-sm md:text-base text-slate-400 font-medium">Sign in to your account to continue</p>
                     </div>
                 </div>
 
-                <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-800/50 rounded-[40px] p-8 shadow-2xl space-y-8">
-                    <form onSubmit={handleLogin} className="space-y-6">
+                <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-800/50 rounded-3xl md:rounded-[40px] p-6 md:p-8 shadow-2xl space-y-6 md:space-y-8">
+                    <form onSubmit={handleLogin} className="space-y-5 md:space-y-6">
                         {error && (
-                            <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-xs font-bold animate-in shake duration-300">
+                            <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-[11px] md:text-xs font-bold animate-in shake duration-300">
                                 {error}
                             </div>
                         )}
 
-                        <div className="space-y-4">
+                        <div className="space-y-4 md:space-y-5">
                             <Input
                                 label="Email Address"
                                 type="email"
@@ -103,13 +103,13 @@ const Login = () => {
                                     value={password}
                                     onChange={setPassword}
                                     required
-                                    placeholder="Enter your password"
+                                    placeholder="Enter password"
                                     prefix={<Lock size={18} className="text-slate-500" />}
                                     suffix={
                                         <button
                                             type="button"
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className="text-slate-500 hover:text-white transition-colors focus:outline-none"
+                                            className="text-slate-500 hover:text-white transition-colors focus:outline-none p-2"
                                         >
                                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                         </button>
@@ -125,10 +125,10 @@ const Login = () => {
                                         onChange={(e) => setRememberMe(e.target.checked)}
                                         className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-purple-600 focus:ring-purple-500/30 focus:ring-offset-0 transition-all"
                                     />
-                                    <span className="text-sm font-semibold text-slate-400 group-hover:text-slate-300 transition-colors">Remember me</span>
+                                    <span className="text-xs md:text-sm font-semibold text-slate-400 group-hover:text-slate-300 transition-colors">Remember me</span>
                                 </label>
-                                <Link to="/forgot-password" size="sm" className="text-sm font-bold text-purple-500 hover:text-purple-400 hover:underline tracking-tight">
-                                    Forgot Password?
+                                <Link to="/forgot-password" size="sm" className="text-xs md:text-sm font-bold text-purple-500 hover:text-purple-400 hover:underline tracking-tight">
+                                    Forgot?
                                 </Link>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ const Login = () => {
                         <button
                             type="submit"
                             disabled={isSubmitting}
-                            className="w-full bg-purple-600 hover:bg-purple-500 text-white py-5 rounded-[20px] font-black text-lg shadow-xl shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="w-full bg-purple-600 hover:bg-purple-500 text-white py-4 md:py-5 rounded-xl md:rounded-[20px] font-black text-base md:text-lg shadow-xl shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50 touch-target"
                         >
                             {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : null}
                             {isSubmitting ? 'Verifying...' : 'Sign In'}
@@ -147,24 +147,24 @@ const Login = () => {
                         <div className="absolute inset-0 flex items-center">
                             <span className="w-full border-t border-slate-800" />
                         </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-[#0f172a] px-4 text-slate-500 font-black tracking-widest">Or continue with</span>
+                        <div className="relative flex justify-center text-[10px] md:text-xs uppercase">
+                            <span className="bg-[#0f172a] px-4 text-slate-500 font-black tracking-widest">Or</span>
                         </div>
                     </div>
 
                     <button
                         onClick={handleGoogleLogin}
-                        className="w-full bg-slate-900/50 border-2 border-slate-800 text-white py-4 rounded-2xl font-black hover:bg-slate-800 transition-all flex items-center justify-center gap-3 group"
+                        className="w-full bg-slate-900/50 border-2 border-slate-800 text-white py-3.5 md:py-4 rounded-xl md:rounded-2xl font-black hover:bg-slate-800 transition-all flex items-center justify-center gap-3 group touch-target"
                     >
                         <Chrome size={20} className="text-white group-hover:scale-110 transition-transform" />
-                        Continue with Google
+                        <span className="text-sm md:text-base">Continue with Google</span>
                     </button>
 
-                    <div className="text-center pt-4">
-                        <p className="text-slate-400 font-bold">
+                    <div className="text-center pt-2 md:pt-4">
+                        <p className="text-xs md:text-sm text-slate-400 font-bold">
                             Don't have an account?{' '}
                             <Link to="/signup" className="text-purple-500 hover:underline">
-                                Create an account
+                                Sign up
                             </Link>
                         </p>
                     </div>

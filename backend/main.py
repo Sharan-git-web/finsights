@@ -4,11 +4,17 @@ from routes import portfolio, stocks, search, expenses, user, market
 
 app = FastAPI()
 
-# ✅ CORS for all Vercel preview + prod domains
+# ✅ CORS for local development and Vercel domains
+origins = [
+    "http://localhost:5174",
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=origins,
     allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=False,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )

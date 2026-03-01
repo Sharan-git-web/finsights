@@ -197,10 +197,10 @@ export default function StockInsights({ theme, selectedTicker }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-10">
+    <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 pb-10 px-0 md:px-2">
       {/* search bar */}
-      <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] shadow-xl flex flex-col items-stretch gap-6 transition-all duration-300">
-        <div className="flex flex-col sm:flex-row items-center gap-4">
+      <div className="bg-[var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[var(--border-color)] shadow-xl flex flex-col items-stretch gap-4 md:gap-6 transition-all duration-300">
+        <div className="flex flex-col sm:flex-row items-center gap-3 md:gap-4">
           <div className="flex-1 w-full">
             <StockAutocomplete
               ref={autocompleteRef}
@@ -212,41 +212,43 @@ export default function StockInsights({ theme, selectedTicker }) {
                 setTicker(symbol);
                 fetchStock(symbol);
               }}
-              placeholder="Search ticker (e.g. RELIANCE, TCS, BTC-INR)"
+              placeholder="Search ticker (e.g. RELIANCE, TCS)"
             />
           </div>
           <button
             onClick={fetchData}
             disabled={loading || !ticker}
-            className="w-full sm:w-auto bg-[var(--accent-primary)] hover:brightness-110 disabled:opacity-50 text-white font-bold px-10 py-3 rounded-2xl transition-all shadow-lg shadow-[var(--accent-primary)]/25 flex items-center justify-center gap-2"
+            className="w-full sm:w-auto bg-[var(--accent-primary)] hover:brightness-110 disabled:opacity-50 text-white font-bold px-6 md:px-10 py-3.5 md:py-3 rounded-xl md:rounded-2xl transition-all shadow-lg shadow-[var(--accent-primary)]/25 flex items-center justify-center gap-2 touch-target"
           >
             {loading ? <Loader2 className="animate-spin" size={20} /> : <Bot size={20} />}
-            {loading ? 'Analyzing...' : 'Analyze Market'}
+            {loading ? 'Analyzing...' : 'Analyze'}
           </button>
         </div>
-        <div className="flex items-center justify-between border-t border-[var(--border-color)] pt-6">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--accent-primary)]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between border-t border-[var(--border-color)] pt-5 md:pt-6 gap-4">
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="w-10 h-10 rounded-xl bg-[var(--accent-primary)]/10 flex items-center justify-center text-[var(--accent-primary)] flex-shrink-0">
               <TrendingUp size={20} />
             </div>
             <div>
-              <p className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">Global Insights</p>
-              <p className="text-sm font-semibold text-[var(--text-main)]">Real-time AI Sentiment Analysis</p>
+              <p className="text-[10px] md:text-xs font-bold text-[var(--text-muted)] uppercase tracking-widest">Global Insights</p>
+              <p className="text-[13px] md:text-sm font-semibold text-[var(--text-main)]">Real-time AI Sentiment Analysis</p>
             </div>
           </div>
-          {renderTrendBadge()}
+          <div className="w-full sm:w-auto flex justify-end">
+            {renderTrendBadge()}
+          </div>
         </div>
       </div>
 
       {loading && (
-        <div className="flex flex-col items-center justify-center p-20 space-y-4">
+        <div className="flex flex-col items-center justify-center p-12 md:p-20 space-y-4">
           <div className="w-10 h-10 border-4 border-[var(--accent-primary)]/20 border-t-[var(--accent-primary)] rounded-full animate-spin"></div>
-          <p className="text-[var(--text-muted)] font-medium">Processing market data & training model...</p>
+          <p className="text-[var(--text-muted)] text-sm font-medium text-center">Processing market data & training model...</p>
         </div>
       )}
 
       {error && (
-        <div className="p-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl font-medium flex items-center gap-2">
+        <div className="p-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-xl font-medium flex items-center gap-2 text-sm">
           <Bot size={20} />
           {error}
         </div>

@@ -128,22 +128,22 @@ export default function Expenses({ theme }) {
     }
 
     return (
-        <div className="max-w-7xl mx-auto space-y-8 pb-10 animate-in fade-in duration-700">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-4xl font-black text-[var(--text-main)] tracking-tight">Expense Dashboard</h1>
-                <p className="text-[var(--text-muted)] font-medium flex items-center gap-2">
-                    <CreditCard size={18} className="text-[var(--accent-primary)]" />
-                    Track and manage your spending with persistent storage
+        <div className="max-w-7xl mx-auto space-y-6 md:space-y-8 pb-10 animate-in fade-in duration-700 px-0 md:px-2">
+            <div className="flex flex-col gap-1 md:gap-2 px-4 md:px-0">
+                <h1 className="text-3xl md:text-4xl font-black text-[var(--text-main)] tracking-tight">Expenses</h1>
+                <p className="text-[11px] md:text-[13px] text-[var(--text-muted)] font-medium flex items-center gap-2">
+                    <CreditCard size={16} className="text-[var(--accent-primary)]" />
+                    Track and manage your spending
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
                 {/* Left Column: Form and KPI */}
-                <div className="lg:col-span-5 space-y-6">
+                <div className="lg:col-span-12 xl:col-span-5 space-y-6">
                     {/* Add Expense Card */}
-                    <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-[var(--border-color)] space-y-6">
-                        <h2 className="text-lg font-bold text-[var(--text-main)] flex items-center gap-3">
-                            <Plus size={20} className="text-[var(--accent-primary)]" />
+                    <div className="bg-[var(--bg-card)] p-5 md:p-6 rounded-xl border border-[var(--border-color)] space-y-5 md:space-y-6">
+                        <h2 className="text-base md:text-lg font-bold text-[var(--text-main)] flex items-center gap-3">
+                            <Plus size={18} className="text-[var(--accent-primary)]" />
                             Add Expense
                         </h2>
                         <form onSubmit={handleAddExpense} className="space-y-4">
@@ -155,7 +155,7 @@ export default function Expenses({ theme }) {
                                 placeholder="e.g. Weekly Groceries"
                                 required
                             />
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <Input
                                     label={`Amount (${selectedCurrency})`}
                                     type="number"
@@ -174,7 +174,7 @@ export default function Expenses({ theme }) {
                             <button
                                 type="submit"
                                 disabled={isAdding}
-                                className="w-full bg-[var(--accent-primary)] text-white font-bold py-3 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                                className="w-full bg-[var(--accent-primary)] text-white font-bold py-3 px-4 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 touch-target"
                             >
                                 {isAdding ? <Loader2 className="animate-spin" size={18} /> : <Plus size={18} />}
                                 {isAdding ? 'Adding...' : 'Add Expense'}
@@ -182,42 +182,42 @@ export default function Expenses({ theme }) {
                         </form>
                     </div>
 
-                    {/* Total Spent Card - Clean Minimal Version */}
-                    <div className="bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border-color)] relative overflow-hidden group">
+                    {/* Total Spent Card */}
+                    <div className="bg-[var(--bg-card)] p-5 md:p-8 rounded-xl border border-[var(--border-color)] relative overflow-hidden group">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-[var(--accent-primary)]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
 
                         <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="p-3 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
-                                    <CreditCard size={20} />
+                            <div className="flex justify-between items-start mb-4 md:mb-6">
+                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
+                                    <CreditCard size={18} />
                                 </div>
-                                <div className="px-3 py-1 bg-[var(--bg-primary)] text-[var(--text-muted)] rounded-full text-[10px] font-bold uppercase tracking-wider border border-[var(--border-color)]">
+                                <div className="px-3 py-1 bg-[var(--bg-primary)] text-[var(--text-muted)] rounded-full text-[9px] md:text-[10px] font-bold uppercase tracking-wider border border-[var(--border-color)]">
                                     Target: ₹80k
                                 </div>
                             </div>
 
-                            <p className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Total Monthly Spend</p>
-                            <h2 className="text-4xl font-bold text-[var(--text-main)] tracking-tight">
+                            <p className="text-[10px] md:text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider mb-1">Total Monthly Spend</p>
+                            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-main)] tracking-tight">
                                 {formatCurrency(totalSpent, selectedCurrency, currentRate)}
                             </h2>
 
-                            <div className="flex items-center gap-2 mt-4">
-                                <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">+12.5%</span>
-                                <span className="text-[11px] text-[var(--text-muted)] font-medium">from last month</span>
+                            <div className="flex items-center gap-2 mt-3 md:mt-4">
+                                <span className="text-[10px] md:text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">+12.5%</span>
+                                <span className="text-[10px] md:text-[11px] text-[var(--text-muted)] font-medium">vs last month</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Right Column: Analytics and List */}
-                <div className="lg:col-span-7 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] flex flex-col h-[460px] transition-all duration-300 group">
-                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3 mb-8">
-                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
-                                    <PieChartIcon size={20} />
+                <div className="lg:col-span-12 xl:col-span-7 space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                        <div className="bg-[var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[var(--border-color)] flex flex-col h-[400px] md:h-[460px] transition-all duration-300 group">
+                            <h3 className="text-[12px] md:text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3 mb-6 md:mb-8">
+                                <div className="p-2 bg-[var(--accent-primary)]/10 rounded-lg text-[var(--accent-primary)]">
+                                    <PieChartIcon size={18} />
                                 </div>
-                                <span>Spending Analysis</span>
+                                <span>Analysis</span>
                             </h3>
                             <div className="flex-1 w-full relative">
                                 {chartData.length > 0 ? (
@@ -227,9 +227,9 @@ export default function Expenses({ theme }) {
                                                 <Pie
                                                     data={chartData}
                                                     cx="50%"
-                                                    cy="50%"
-                                                    innerRadius={75}
-                                                    outerRadius={100}
+                                                    cy="40%"
+                                                    innerRadius={60}
+                                                    outerRadius={85}
                                                     paddingAngle={4}
                                                     dataKey="value"
                                                     stroke="none"
@@ -255,18 +255,16 @@ export default function Expenses({ theme }) {
                                                 />
                                             </PieChart>
                                         </ResponsiveContainer>
-                                        {/* Center Total Label */}
-                                        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                                            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-1">TOTAL spend</p>
-                                            <p className="text-2xl font-bold text-[var(--text-main)] tracking-tight">
+                                        <div className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+                                            <p className="text-[18px] font-bold text-[var(--text-main)] tracking-tight">
                                                 {formatCurrency(totalSpent, selectedCurrency, currentRate).split('.')[0]}
                                             </p>
                                         </div>
-                                        <div className="flex flex-wrap items-center justify-center gap-3 mt-4 px-2">
+                                        <div className="flex flex-wrap items-center justify-center gap-3 mt-2 px-2">
                                             {chartData.slice(0, 3).map((entry, index) => (
-                                                <div key={entry.name} className="flex items-center gap-2">
+                                                <div key={entry.name} className="flex items-center gap-1.5">
                                                     <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                                                    <span className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider">{entry.name}</span>
+                                                    <span className="text-[9px] font-bold text-[var(--text-muted)] uppercase tracking-wider">{entry.name}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -280,18 +278,18 @@ export default function Expenses({ theme }) {
                         </div>
 
                         {/* Summary List Card */}
-                        <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] flex flex-col h-[460px] transition-all duration-300">
-                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3 mb-8">
-                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
-                                    <List size={20} />
+                        <div className="bg-[var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[var(--border-color)] flex flex-col h-[400px] md:h-[460px] transition-all duration-300">
+                            <h3 className="text-[12px] md:text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3 mb-6 md:mb-8">
+                                <div className="p-2 bg-[var(--accent-primary)]/10 rounded-lg text-[var(--accent-primary)]">
+                                    <List size={18} />
                                 </div>
                                 <span>Top Categories</span>
                             </h3>
-                            <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
+                            <div className="flex-1 overflow-y-auto no-scrollbar space-y-5 md:space-y-6">
                                 {([...chartData]).sort((a, b) => b.value - a.value).slice(0, 5).map((cat, idx) => (
-                                    <div key={cat.name} className="group/cat flex flex-col gap-2.5">
-                                        <div className="flex justify-between items-center text-[11px] font-bold uppercase tracking-wider">
-                                            <div className="flex items-center gap-2.5">
+                                    <div key={cat.name} className="group/cat flex flex-col gap-2">
+                                        <div className="flex justify-between items-center text-[10px] md:text-[11px] font-bold uppercase tracking-wider">
+                                            <div className="flex items-center gap-2">
                                                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: COLORS[idx % COLORS.length] }} />
                                                 <span className="text-[var(--text-main)] opacity-90">{cat.name}</span>
                                             </div>
@@ -311,53 +309,48 @@ export default function Expenses({ theme }) {
                                         </div>
                                     </div>
                                 ))}
-                                {chartData.length === 0 && (
-                                    <div className="flex items-center justify-center h-full text-[var(--text-muted)] font-medium italic opacity-50">
-                                        No data available
-                                    </div>
-                                )}
                             </div>
                         </div>
                     </div>
 
                     {/* Recent Activity Card */}
-                    <div className="bg-[var(--bg-card)] p-8 rounded-3xl border border-[var(--border-color)] space-y-8">
+                    <div className="bg-[var(--bg-card)] p-4 md:p-8 rounded-2xl md:rounded-3xl border border-[var(--border-color)] space-y-6 md:space-y-8">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3">
-                                <div className="p-2.5 bg-[var(--accent-primary)]/10 rounded-xl text-[var(--accent-primary)]">
-                                    <List size={20} />
+                            <h3 className="text-[12px] md:text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest flex items-center gap-3">
+                                <div className="p-2 bg-[var(--accent-primary)]/10 rounded-lg text-[var(--accent-primary)]">
+                                    <List size={18} />
                                 </div>
-                                <span>Recent Transitions</span>
+                                <span>Transitions</span>
                             </h3>
-                            <div className="px-3 py-1 bg-[var(--bg-primary)] rounded-full border border-[var(--border-color)]">
-                                <span className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-muted)] opacity-60">
+                            <div className="px-2.5 py-0.5 bg-[var(--bg-primary)] rounded-full border border-[var(--border-color)]">
+                                <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--text-muted)] opacity-60">
                                     {expenses.length} Records
                                 </span>
                             </div>
                         </div>
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left">
+                        <div className="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                            <table className="w-full text-left min-w-[500px]">
                                 <thead>
-                                    <tr className="text-[var(--text-muted)] text-[10px] font-bold uppercase tracking-widest border-b border-[var(--border-color)]">
-                                        <th className="pb-4 px-4">Detail</th>
-                                        <th className="pb-4 px-4">Category</th>
-                                        <th className="pb-4 px-4 text-right">Amount</th>
-                                        <th className="pb-4 px-4 text-center">Action</th>
+                                    <tr className="text-[var(--text-muted)] text-[9px] md:text-[10px] font-bold uppercase tracking-widest border-b border-[var(--border-color)]">
+                                        <th className="pb-4 px-2 md:px-4">Detail</th>
+                                        <th className="pb-4 px-2 md:px-4">Category</th>
+                                        <th className="pb-4 px-2 md:px-4 text-right">Amount</th>
+                                        <th className="pb-4 px-2 md:px-4 text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {expenses.map((exp) => (
-                                        <tr key={exp.id} className="group hover:bg-[var(--bg-primary)]/50 transition-all border-b border-[var(--border-color)]/30 last:border-0">
-                                            <td className="py-4 px-4">
+                                        <tr key={exp.id} className="group hover:bg-[var(--bg-primary)]/50 transition-all border-b border-[var(--border-color)]/30 last:border-0 text-[12px] md:text-[13px]">
+                                            <td className="py-3 md:py-4 px-2 md:px-4">
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-[13px] text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">{exp.description}</span>
-                                                    <span className="text-[10px] text-[var(--text-muted)] opacity-50">
+                                                    <span className="font-bold text-[var(--text-main)] group-hover:text-[var(--accent-primary)] transition-colors">{exp.description}</span>
+                                                    <span className="text-[9px] md:text-[10px] text-[var(--text-muted)] opacity-50">
                                                         {new Date(exp.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                                                     </span>
                                                 </div>
                                             </td>
-                                            <td className="py-4 px-4">
-                                                <span className={`px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border
+                                            <td className="py-3 md:py-4 px-2 md:px-4">
+                                                <span className={`px-2 py-0.5 rounded-md text-[9px] md:text-[10px] font-bold uppercase tracking-wider border
                                                     ${exp.category === 'Food' ? 'bg-orange-500/10 text-orange-400 border-orange-500/20' :
                                                         exp.category === 'Shopping' ? 'bg-pink-500/10 text-pink-400 border-pink-500/20' :
                                                             exp.category === 'Bills' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' :
@@ -366,32 +359,20 @@ export default function Expenses({ theme }) {
                                                     {exp.category}
                                                 </span>
                                             </td>
-                                            <td className="py-4 px-4 text-right font-bold text-[13px] text-[var(--text-main)] tabular-nums">
+                                            <td className="py-3 md:py-4 px-2 md:px-4 text-right font-bold text-[var(--text-main)] tabular-nums">
                                                 {formatCurrency(exp.amount, selectedCurrency, currentRate)}
                                             </td>
-                                            <td className="py-4 px-4 text-center">
+                                            <td className="py-3 md:py-4 px-2 md:px-4 text-center">
                                                 <button
                                                     onClick={() => handleDeleteExpense(exp.id)}
                                                     disabled={isDeleting === exp.id}
-                                                    className="p-2 text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
+                                                    className="p-1 px-2 text-[var(--text-muted)] hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
                                                 >
-                                                    {isDeleting === exp.id ? <Loader2 className="animate-spin" size={16} /> : <Trash2 size={16} />}
+                                                    {isDeleting === exp.id ? <Loader2 className="animate-spin" size={14} /> : <Trash2 size={14} />}
                                                 </button>
                                             </td>
                                         </tr>
                                     ))}
-                                    {expenses.length === 0 && (
-                                        <tr>
-                                            <td colSpan="4" className="py-20 text-center">
-                                                <div className="flex flex-col items-center gap-3 opacity-20">
-                                                    <div className="p-5 bg-[var(--bg-primary)] rounded-full border-2 border-dashed border-[var(--border-color)]">
-                                                        <CreditCard size={40} />
-                                                    </div>
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest">No transactions found</span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    )}
                                 </tbody>
                             </table>
                         </div>
