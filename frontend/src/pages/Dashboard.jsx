@@ -10,9 +10,9 @@ import { formatCurrency } from '../utils/formatCurrency';
 
 export default function Dashboard() {
     const { selectedCurrency, getRate } = useCurrency();
-    const [timeFilter, setTimeFilter] = useState('1M');
     const [portfolioData, setPortfolioData] = useState(null);
     const [historyData, setHistoryData] = useState([]);
+    const [signupDate, setSignupDate] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ export default function Dashboard() {
             try {
                 const [pRes, hRes] = await Promise.all([
                     api.get("/portfolio/"),
-                    api.get(`/portfolio/history?period=${timeFilter}`)
+                    api.get("/portfolio/history")
                 ]);
 
                 const data = pRes.data;
@@ -45,6 +45,7 @@ export default function Dashboard() {
                     topAllocation: holdings[0]?.allocation || 0
                 });
                 setHistoryData(hRes.data.history || []);
+                setSignupDate(hRes.data.signupDate);
             } catch (err) {
                 console.error("Dashboard fetch error:", err);
             } finally {
@@ -52,7 +53,19 @@ export default function Dashboard() {
             }
         };
         fetchData();
-    }, [timeFilter]);
+    }, []);
+
+    // Growth calculation logic
+    const calculateGrowth = () => {
+        if (!historyData || historyData.length < 2) return 0;
+        const first = historyData[0].value;
+        const last = historyData[historyData.length - 1].value;
+        if (first === 0) return 0;
+        return ((last - first) / first) * 100;
+    };
+
+    const growthPercent = calculateGrowth();
+    const formattedSignupDate = signupDate ? new Date(signupDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }) : '';
 
     if (loading) {
         return (
@@ -110,66 +123,75 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* Chart Section */}
-                <div className="lg:col-span-2 bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border-color)]">
-                    <div className="flex justify-between items-center mb-8">
+                <div className="lg:col-span-2 bg-[var(--bg-card)] p-8 rounded-xl border border-[var(--border-color)] relative overflow-hidden">
+                    <div className="flex justify-between items-start mb-10">
                         <div>
-                            <h3 className="text-[13px] font-bold text-[var(--text-muted)] uppercase tracking-widest mb-1">Portfolio Growth</h3>
-                            <p className="text-xl font-bold text-[var(--text-main)]">Asset performance history</p>
+                            <h3 className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mb-2">Portfolio Growth</h3>
+                            <p className="text-xl font-bold text-[var(--text-main)]">Since {formattedSignupDate}</p>
                         </div>
-                        <div className="flex bg-[var(--bg-primary)] p-1 rounded-lg border border-[var(--border-color)]">
-                            {['1W', '1M', '1Y', 'ALL'].map(f => (
-                                <button
-                                    key={f}
-                                    onClick={() => setTimeFilter(f)}
-                                    className={`px-3 py-1 text-[11px] font-bold rounded-md transition-all ${timeFilter === f ? 'bg-[var(--bg-card)] text-[var(--text-main)] shadow-sm' : 'text-[var(--text-muted)] hover:text-[var(--text-main)]'}`}
-                                >
-                                    {f}
-                                </button>
-                            ))}
+                        <div className="text-right">
+                            <p className={`text-2xl font-bold ${growthPercent >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                {growthPercent >= 0 ? '+' : ''}{growthPercent.toFixed(2)}%
+                            </p>
+                            <p className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-wider mt-1">Total Performance</p>
                         </div>
                     </div>
 
-                    <div className="h-[320px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={historyData}>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.3} />
-                                <XAxis
-                                    dataKey="time"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 500 }}
-                                    dy={10}
-                                />
-                                <YAxis
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: 'var(--text-muted)', fontSize: 10, fontWeight: 500 }}
-                                    tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
-                                    width={45}
-                                />
-                                <RechartsTooltip
-                                    cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }}
-                                    contentStyle={{
-                                        backgroundColor: 'var(--bg-card)',
-                                        borderRadius: '12px',
-                                        border: '1px solid var(--border-color)',
-                                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3)',
-                                        padding: '12px'
-                                    }}
-                                    itemStyle={{ color: 'var(--text-main)', fontSize: '13px', fontWeight: 'bold' }}
-                                    labelStyle={{ color: 'var(--text-muted)', fontSize: '11px', marginBottom: '4px' }}
-                                />
-                                <Line
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="var(--accent-primary)"
-                                    strokeWidth={1.5}
-                                    dot={false}
-                                    activeDot={{ r: 4, fill: 'var(--accent-primary)', stroke: 'var(--bg-card)', strokeWidth: 2 }}
-                                    animationDuration={1500}
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
+                    <div className="h-[300px] w-full">
+                        {historyData.length < 2 ? (
+                            <div className="h-full w-full flex flex-col items-center justify-center text-center p-10 space-y-4">
+                                <div className="w-12 h-12 rounded-full bg-[var(--bg-primary)] flex items-center justify-center border border-[var(--border-color)]">
+                                    <TrendingUp size={20} className="text-[var(--text-muted)] opacity-50" />
+                                </div>
+                                <div>
+                                    <p className="text-[var(--text-main)] font-bold text-sm tracking-tight text-muji leading-relaxed">Tracking started today.</p>
+                                    <p className="text-[var(--text-muted)] text-[11px] mt-1">Growth data will appear soon as markets move.</p>
+                                </div>
+                            </div>
+                        ) : (
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={historyData}>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-color)" opacity={0.2} />
+                                    <XAxis
+                                        dataKey="time"
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: 'var(--text-muted)', fontSize: 9, fontWeight: 600 }}
+                                        dy={10}
+                                        minTickGap={30}
+                                    />
+                                    <YAxis
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: 'var(--text-muted)', fontSize: 9, fontWeight: 600 }}
+                                        tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
+                                        width={40}
+                                    />
+                                    <RechartsTooltip
+                                        cursor={{ stroke: 'var(--accent-primary)', strokeWidth: 1, strokeDasharray: '4 4' }}
+                                        contentStyle={{
+                                            backgroundColor: 'var(--bg-card)',
+                                            borderRadius: '8px',
+                                            border: '1px solid var(--border-color)',
+                                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                                            padding: '8px 12px'
+                                        }}
+                                        itemStyle={{ color: 'var(--text-main)', fontSize: '13px', fontWeight: 'bold' }}
+                                        labelStyle={{ color: 'var(--text-muted)', fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase', fontWeight: 'bold' }}
+                                        formatter={(value) => [formatCurrency(value, selectedCurrency, getRate(selectedCurrency), 0), 'Value']}
+                                    />
+                                    <Line
+                                        type="monotone"
+                                        dataKey="value"
+                                        stroke="var(--accent-primary)"
+                                        strokeWidth={1.5}
+                                        dot={false}
+                                        activeDot={{ r: 4, fill: 'var(--accent-primary)', stroke: 'var(--bg-card)', strokeWidth: 2 }}
+                                        animationDuration={1500}
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        )}
                     </div>
                 </div>
 

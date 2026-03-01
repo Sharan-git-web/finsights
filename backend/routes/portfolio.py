@@ -174,10 +174,10 @@ def delete_from_portfolio(item_id: str, request: Request):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/history")
-def get_portfolio_history(request: Request, period: str = "1mo"):
+def get_portfolio_history(request: Request):
     """
-    Returns aggregated historical time-series data for the user's current portfolio.
-    Period maps to yfinance periods: "1w"-> "5d", "1m"-> "1mo", "1y"-> "1y"
+    Returns aggregated historical time-series data for the user's current portfolio,
+    strictly starting from their signup date (user.created_at).
     """
     try:
         user_id = get_current_user(request)
@@ -188,106 +188,93 @@ def get_portfolio_history(request: Request, period: str = "1mo"):
         if token:
             supabase.postgrest.auth(token)
             
+        # 1. Fetch user signup date from Supabase Auth
+        user_response = supabase.auth.get_user(token)
+        user_obj = user_response.user
+        if not user_obj:
+            raise HTTPException(status_code=401, detail="User not found")
+        
+        signup_dt = pd.to_datetime(user_obj.created_at).tz_localize(None)
+        
+        # 2. Fetch portfolio assets
         result = supabase.table("portfolio").select("*").eq("user_id", user_id).execute()
         port_data = result.data
     except Exception as e:
         print(f"Auth/DB error in history: {e}")
-        return {"history": []}
+        return {"history": [], "signupDate": None}
         
     if not port_data:
-        return {"history": []}
+        return {"history": [], "signupDate": user_obj.created_at if user_obj else None}
 
-    # Map frontend period to yfinance period
-    yf_period = "1mo"
-    if period.lower() == "1w":
-        yf_period = "5d"
-    elif period.lower() == "1y":
-        yf_period = "1y"
-
+    # Use 1y as the maximum historical window to fetch from yfinance
+    yf_period = "1y"
     symbols = [stock["stock_symbol"] for stock in port_data]
     
     try:
-        # Download historical closing prices
         hist_data_raw = yf.download(symbols, period=yf_period, progress=False)
-        
         if hist_data_raw.empty:
-             return {"history": []}
+             return {"history": [], "signupDate": user_obj.created_at}
              
-        # Robust column extraction for history
         if isinstance(hist_data_raw.columns, pd.MultiIndex):
              close_prices = hist_data_raw.xs('Close', axis=1, level=0)
         else:
-             # Simple Index
              if 'Close' in hist_data_raw.columns:
                  close_prices = hist_data_raw[['Close']]
                  if len(symbols) == 1:
                      close_prices.columns = [symbols[0]]
              else:
-                 print("Close not found in history columns")
-                 return {"history": []}
+                 return {"history": [], "signupDate": user_obj.created_at}
              
-        # Drop rows with all NaNs to clean up weekends/holidays
         close_prices = close_prices.dropna(how='all')
-        
     except Exception as e:
         print(f"History fetch error: {e}")
-        return {"history": []}
+        return {"history": [], "signupDate": user_obj.created_at}
 
-    # Aggregate daily portfolio value
     history_list = []
     
-    # Iterate over each date in the index
     for date in close_prices.index:
+        current_date_naive = pd.to_datetime(date).tz_localize(None)
+        # CRITICAL FILTER: Only include dates >= signup date
+        if current_date_naive < signup_dt.normalize():
+            continue
+
         daily_total = 0
         for stock in port_data:
             symbol = stock["stock_symbol"]
             qty = float(stock["quantity"])
             buy_price = float(stock.get("buy_price", 0))
             
-            # Parse created_at if available to know when the user actually bought it
             created_at_str = stock.get("created_at")
             bought_date = None
             if created_at_str:
-                # supabase timestamps are like 2024-02-14T10:00:00+00:00
                 try:
                     bought_date = pd.to_datetime(created_at_str).tz_localize(None)
                 except Exception:
-                    # fallback
-                    bought_date = pd.to_datetime("2024-02-01")
+                    bought_date = signup_dt
             else:
-                # If no created_at, default to start of current month as a fallback for user's request
-                bought_date = pd.to_datetime("2024-02-01")
+                bought_date = signup_dt
 
-            # Get the closing price for this symbol on this date
             if symbol in close_prices.columns:
                 price = close_prices.loc[date, symbol]
                 if not pd.isna(price):
-                    # If the date is BEFORE they bought it, just show the flat buy_price (cash value)
-                    # to create a 'straight line' in past months like Jan
-                    if pd.to_datetime(date).tz_localize(None) < bought_date:
-                        daily_total += (buy_price * qty)
+                    if current_date_naive < bought_date:
+                        # Value is 0 because they didn't own it yet
+                        pass
                     else:
                         daily_total += (price * qty)
-                     
-        # Format date depending on period
-        date_str = date.strftime('%b %d') if yf_period in ['5d', '1mo'] else date.strftime('%Y-%b')
-        
-        # Avoid duplicate months if doing 1y aggregation (simple hack: just take the last day of month if needed, but daily is fine for Recharts if we format axis)
-        
+                      
+        date_str = date.strftime('%b %d, %Y')
         history_list.append({
             "time": date_str,
             "value": round(daily_total, 2),
-            "timestamp": date.timestamp() # useful for strictly ordering or filtering
+            "timestamp": date.timestamp()
         })
 
-    # For 1Y, daily data is too dense (252 points). Let's resample to weekly or just return it and let recharts handle it. 
-    # Recharts handles dense data decently well if we just format the X-axis.
-    
-    # Ensure it's sorted by time intrinsically
     history_list = sorted(history_list, key=lambda x: x["timestamp"])
-
-    # Remove the timestamp before sending to frontend to save bandwidth
     for item in history_list:
         del item["timestamp"]
 
-    return {"history": history_list}
+    return {
+        "history": history_list,
+        "signupDate": user_obj.created_at
+    }
