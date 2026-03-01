@@ -2,7 +2,7 @@ import axios from 'axios';
 import { supabase } from '../lib/supabase';
 
 const api = axios.create({
-    baseURL: 'https://finsights-u0m9.onrender.com/api'
+    baseURL: 'http://localhost:8000/api'
 });
 
 // Add a request interceptor to include the JWT token
