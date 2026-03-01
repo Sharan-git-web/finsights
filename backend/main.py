@@ -9,13 +9,13 @@ origins = [
     "http://localhost:5174",
     "http://localhost:3000",
     "https://finsights-five.vercel.app",
+    "*"  # Temporary broad allow to troubleshoot
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_origin_regex=r"https://.*\.vercel\.app",
-    allow_credentials=True,
+    allow_credentials=False, # Set to False when using "*"
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -30,4 +30,4 @@ app.include_router(market.router, prefix="/api/market")
 
 @app.get("/")
 def root():
-    return {"message": "FINSIGHTS API running 🚀"}
+    return {"message": "FINSIGHTS API running 🚀", "version": "1.0.2"}
