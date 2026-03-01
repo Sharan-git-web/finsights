@@ -4,15 +4,11 @@ from routes import portfolio, stocks, search, expenses, user, market
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:5173",
-    "https://finsights-ki8r.vercel.app",
-]
-
+# ✅ CORS for all Vercel preview + prod domains
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=False,   # 🔥 IMPORTANT CHANGE
+    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
