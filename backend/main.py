@@ -8,6 +8,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5174",
     "http://localhost:3000",
+    "https://finsights-five.vercel.app",
 ]
 
 app.add_middleware(
