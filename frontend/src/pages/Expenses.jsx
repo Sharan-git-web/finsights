@@ -315,7 +315,7 @@ export default function Expenses({ theme }) {
                                 <span className="tracking-tight">Top Categories</span>
                             </h3>
                             <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
-                                {chartData.sort((a, b) => b.value - a.value).slice(0, 5).map((cat, idx) => (
+                                {([...chartData]).sort((a, b) => b.value - a.value).slice(0, 5).map((cat, idx) => (
                                     <div key={cat.name} className="group/cat flex flex-col gap-2.5 hover:translate-x-1 transition-transform duration-200">
                                         <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-[0.15em]">
                                             <div className="flex items-center gap-2.5">
