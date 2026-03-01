@@ -27,7 +27,8 @@ export const CurrencyProvider = ({ children }) => {
     useEffect(() => {
         const fetchRates = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/stocks/exchange-rates');
+                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+                const response = await axios.get(`${API_URL}/api/stocks/exchange-rates`);
                 setExchangeRates(response.data);
             } catch (error) {
                 console.error('Error fetching exchange rates:', error);

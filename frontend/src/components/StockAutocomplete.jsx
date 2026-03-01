@@ -67,7 +67,8 @@ const StockAutocomplete = forwardRef(({ onSelect, onChange, placeholder = "Searc
         abortControllerRef.current = new AbortController();
 
         try {
-            const response = await axios.get(`http://localhost:8000/api/search?q=${query}`, {
+            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+            const response = await axios.get(`${API_URL}/api/search?q=${query}`, {
                 signal: abortControllerRef.current.signal
             });
             // Filter out excluded symbols
