@@ -27,7 +27,8 @@ export const CurrencyProvider = ({ children }) => {
     useEffect(() => {
         const fetchRates = async () => {
             try {
-                const response = await axios.get('https://finsights-u0m9.onrender.com/api/stocks/exchange-rates');
+                const API_BASE = import.meta.env.VITE_API_URL;
+                const response = await axios.get(`${API_BASE}/api/stocks/exchange-rates`);
                 setExchangeRates(response.data);
             } catch (error) {
                 console.error('Error fetching exchange rates:', error);
