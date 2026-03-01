@@ -39,6 +39,7 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
     now = datetime.now(timezone.utc)
     results = []
 
+    rate_limited = False
     for symbol in tickers:
         symbol = symbol.upper()
         # check cache
@@ -60,7 +61,9 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
             # 2. Fetch metadata (less reliable due to rate limits)
             try:
                 info = ticker.info
-            except Exception:
+            except Exception as e:
+                if "Too Many Requests" in str(e) or "Rate limited" in str(e):
+                    rate_limited = True
                 info = {}
             
             fast = ticker.fast_info
@@ -114,8 +117,13 @@ def get_multi_stock_comparison(tickers: List[str]) -> List[dict]:
             results.append(data)
 
         except Exception as e:
+            if "Too Many Requests" in str(e) or "Rate limited" in str(e):
+                rate_limited = True
             print(f"Error comparing {symbol}: {e}")
             continue
+
+    if not results and rate_limited:
+        raise ValueError("Yahoo Finance is currently rate limiting requests. Please try again in a few minutes.")
 
     return results
 
@@ -132,6 +140,8 @@ def get_stock_insights(ticker_symbol: str) -> dict:
         # 1. Fetch history (primary source)
         hist: pd.DataFrame = ticker.history(period="1y")
     except Exception as exc:
+        if "Too Many Requests" in str(exc) or "Rate limited" in str(exc):
+            raise ValueError("Yahoo Finance rate limit hit. Please try again later.")
         raise ValueError(f"Failed to fetch data for {ticker_symbol}: {exc}")
 
     if hist.empty:
