@@ -12,12 +12,10 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
-    allow_credentials=True,
+    allow_credentials=False,   # 🔥 IMPORTANT CHANGE
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# IMPORTANT: middleware must be above routers
 
 app.include_router(portfolio.router, prefix="/api/portfolio")
 app.include_router(stocks.router, prefix="/api/stocks")
