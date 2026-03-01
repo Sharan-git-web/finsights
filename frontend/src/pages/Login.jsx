@@ -1,0 +1,177 @@
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { Mail, Lock, ArrowRight, Loader2, Chrome, Eye, EyeOff, TrendingUp } from 'lucide-react';
+import { Input } from './modules/shared';
+
+const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+    const [error, setError] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { signIn, signInWithGoogle, user } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard", { replace: true });
+        }
+    }, [user, navigate]);
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setIsSubmitting(true);
+
+        try {
+            const { data, error: signInError } = await signIn({ email, password });
+            if (signInError) throw signInError;
+
+            // Check if email is confirmed
+            if (!data.user?.email_confirmed_at) {
+                navigate('/verify-email');
+                return;
+            }
+
+            navigate(location.state?.from?.pathname || "/dashboard", { replace: true });
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleGoogleLogin = async () => {
+        try {
+            const { error } = await signInWithGoogle();
+            if (error) throw error;
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 relative overflow-hidden">
+            {/* Background Glows */}
+            <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-purple-600/20 blur-[120px] rounded-full"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 blur-[120px] rounded-full"></div>
+
+            <div className="w-full max-w-md space-y-8 relative z-10">
+                <div className="text-center space-y-6">
+                    <div className="flex items-center justify-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/20">
+                            <TrendingUp size={22} className="text-white" />
+                        </div>
+                        <h1 className="text-2xl font-black tracking-tighter text-white uppercase">
+                            FINSIGHTS
+                        </h1>
+                    </div>
+                    <div className="space-y-1">
+                        <h2 className="text-3xl font-black text-white tracking-tight">Welcome Back</h2>
+                        <p className="text-slate-400 font-medium">Sign in to your account to continue</p>
+                    </div>
+                </div>
+
+                <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-800/50 rounded-[40px] p-8 shadow-2xl space-y-8">
+                    <form onSubmit={handleLogin} className="space-y-6">
+                        {error && (
+                            <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-500 rounded-2xl text-xs font-bold animate-in shake duration-300">
+                                {error}
+                            </div>
+                        )}
+
+                        <div className="space-y-4">
+                            <Input
+                                label="Email Address"
+                                type="email"
+                                value={email}
+                                onChange={setEmail}
+                                required
+                                placeholder="you@example.com"
+                                prefix={<Mail size={18} className="text-slate-500" />}
+                            />
+
+                            <div className="relative">
+                                <Input
+                                    label="Password"
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={setPassword}
+                                    required
+                                    placeholder="Enter your password"
+                                    prefix={<Lock size={18} className="text-slate-500" />}
+                                    suffix={
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="text-slate-500 hover:text-white transition-colors focus:outline-none"
+                                        >
+                                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
+                                    }
+                                />
+                            </div>
+
+                            <div className="flex items-center justify-between px-1">
+                                <label className="flex items-center gap-2 cursor-pointer group">
+                                    <input
+                                        type="checkbox"
+                                        checked={rememberMe}
+                                        onChange={(e) => setRememberMe(e.target.checked)}
+                                        className="w-4 h-4 rounded border-slate-700 bg-slate-800 text-purple-600 focus:ring-purple-500/30 focus:ring-offset-0 transition-all"
+                                    />
+                                    <span className="text-sm font-semibold text-slate-400 group-hover:text-slate-300 transition-colors">Remember me</span>
+                                </label>
+                                <Link to="/forgot-password" size="sm" className="text-sm font-bold text-purple-500 hover:text-purple-400 hover:underline tracking-tight">
+                                    Forgot Password?
+                                </Link>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full bg-purple-600 hover:bg-purple-500 text-white py-5 rounded-[20px] font-black text-lg shadow-xl shadow-purple-500/20 transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            {isSubmitting ? <Loader2 className="animate-spin" size={24} /> : null}
+                            {isSubmitting ? 'Verifying...' : 'Sign In'}
+                        </button>
+                    </form>
+
+                    <div className="relative">
+                        <div className="absolute inset-0 flex items-center">
+                            <span className="w-full border-t border-slate-800" />
+                        </div>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-[#0f172a] px-4 text-slate-500 font-black tracking-widest">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={handleGoogleLogin}
+                        className="w-full bg-slate-900/50 border-2 border-slate-800 text-white py-4 rounded-2xl font-black hover:bg-slate-800 transition-all flex items-center justify-center gap-3 group"
+                    >
+                        <Chrome size={20} className="text-white group-hover:scale-110 transition-transform" />
+                        Continue with Google
+                    </button>
+
+                    <div className="text-center pt-4">
+                        <p className="text-slate-400 font-bold">
+                            Don't have an account?{' '}
+                            <Link to="/signup" className="text-purple-500 hover:underline">
+                                Create an account
+                            </Link>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default Login;

@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-dotenv
+supabase
+yfinance
+pandas
+numpy
+scikit-learn
+requests
+python-jose[cryptography]
+email-validator
