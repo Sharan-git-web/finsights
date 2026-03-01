@@ -4,7 +4,8 @@ import { supabase } from '../lib/supabase';
 const API_BASE = import.meta.env.VITE_API_URL;
 
 const api = axios.create({
-    baseURL: `${API_BASE}/api`
+    baseURL: `${API_BASE}/api`,
+    withCredentials: false
 });
 
 // Add a request interceptor to include the JWT token
