@@ -4,16 +4,20 @@ from routes import portfolio, stocks, search, expenses, user, market
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",
+    "https://finsights-ki8r.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "https://finsights-ki8r.vercel.app"
-    ],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# IMPORTANT: middleware must be above routers
 
 app.include_router(portfolio.router, prefix="/api/portfolio")
 app.include_router(stocks.router, prefix="/api/stocks")
